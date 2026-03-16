@@ -1,0 +1,6 @@
+@Florama_HostAddress = http://localhost:5063
+
+GET {{Florama_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
