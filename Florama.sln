@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Florama.Api", "src\Florama.Api\Florama.Api.csproj", "{79A57DFD-05DA-41DA-AE8C-EB77A337D3A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Florama.Application", "src\Florama.Application\Florama.Application.csproj", "{B6CC8663-75DA-401E-9F1F-7EC894C3127F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1- Presentation", "1- Presentation", "{754F48BD-72E7-4B17-AC2B-E5D6679FC227}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Presentation", "1 - Presentation", "{754F48BD-72E7-4B17-AC2B-E5D6679FC227}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Application", "2 - Application", "{92FB22B6-3BF3-447A-976F-D57E04563D79}"
 EndProject
@@ -17,12 +17,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Florama.Domain", "src\Flora
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Infra", "4 - Infra", "{BA59EB93-67DB-436D-A4AC-87A5964C73FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Florama.Infra", "src\Florama.Infra\Florama.Infra.csproj", "{06047796-C1AB-4919-B3F9-9A9CBECC743B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Florama.Data", "src\Florama.Infra\Florama.Data.csproj", "{06047796-C1AB-4919-B3F9-9A9CBECC743B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Solution Items", "5 - Solution Items", "{6AD9F7A0-EF5B-480A-A373-478DF34D0E0D}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.1 - Data", "4.1 - Data", "{41A21ACD-80B4-44F7-929D-F9300FF130DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +56,7 @@ Global
 		{79A57DFD-05DA-41DA-AE8C-EB77A337D3A0} = {754F48BD-72E7-4B17-AC2B-E5D6679FC227}
 		{B6CC8663-75DA-401E-9F1F-7EC894C3127F} = {92FB22B6-3BF3-447A-976F-D57E04563D79}
 		{2C962B09-0753-42A3-9FFD-36F867AA11C3} = {16093F42-6D96-475C-87F1-86CFA8E813B1}
-		{06047796-C1AB-4919-B3F9-9A9CBECC743B} = {BA59EB93-67DB-436D-A4AC-87A5964C73FE}
+		{06047796-C1AB-4919-B3F9-9A9CBECC743B} = {41A21ACD-80B4-44F7-929D-F9300FF130DE}
+		{41A21ACD-80B4-44F7-929D-F9300FF130DE} = {BA59EB93-67DB-436D-A4AC-87A5964C73FE}
 	EndGlobalSection
 EndGlobal
