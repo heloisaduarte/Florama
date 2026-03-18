@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Florama.Api.Request;
 using Florama.Api.ViewModel;
 using Florama.Application.DTOs;
 using Florama.Application.Interfaces;
@@ -24,13 +25,13 @@ namespace Florama.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Criar(CategoriaViewModel viewModel)
+        [HttpPost("criar")]
+        public async Task<IActionResult> Criar(CriarCategoriaRequest request)
         {
             if (!ModelState.IsValid)
                 return CustomResponse(ModelState);
 
-            var dto = _mapper.Map<CategoriaDto>(viewModel);
+            var dto = _mapper.Map<CategoriaDto>(request);
 
             var result = await _appService.Criar(dto);
 

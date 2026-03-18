@@ -1,3 +1,4 @@
+using Florama.Api.AutoMapper;
 using Florama.Api.Extensions;
 using Florama.Application;
 using Florama.Application.AutoMapper;

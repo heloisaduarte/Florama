@@ -1,9 +1,9 @@
-﻿using Florama.Api.ViewModel;
+﻿using Florama.Api.Request;
 using FluentValidation;
 
-public class CategoriaViewModelValidation : AbstractValidator<CategoriaViewModel>
+public class CriarCategoriaRequestValidation : AbstractValidator<CriarCategoriaRequest>
 {
-    public CategoriaViewModelValidation()
+    public CriarCategoriaRequestValidation()
     {
         RuleFor(x => x.Nome)
             .NotEmpty()
