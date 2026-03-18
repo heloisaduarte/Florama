@@ -28,17 +28,29 @@ namespace Florama.Api.Controllers
         [HttpPost("criar")]
         public async Task<IActionResult> Criar(CriarCategoriaRequest request)
         {
-            if (!ModelState.IsValid)
-                return CustomResponse(ModelState);
-
             var dto = _mapper.Map<CategoriaDto>(request);
 
             var result = await _appService.Criar(dto);
 
-            if (result == null)
-                return CustomResponse();
+            return CustomResponse(_mapper.Map<CategoriaViewModel>(result));
+        }
+
+        [HttpPut("atualizar")]
+        public async Task<IActionResult> Atualizar(AtualizarCategoriaRequest request)
+        {
+            var dto = _mapper.Map<CategoriaDto>(request);
+
+            var result = await _appService.Criar(dto);
 
             return CustomResponse(_mapper.Map<CategoriaViewModel>(result));
+        }
+
+        [HttpGet("obter-todos")]
+        public async Task<IActionResult> ObterTodos()
+        {
+            var result = await _appService.ObterTodos();
+
+            return CustomResponse(_mapper.Map<IEnumerable<CategoriaViewModel>>(result));
         }
     }
 }

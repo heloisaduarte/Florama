@@ -1,5 +1,4 @@
-﻿using Florama.Application.AutoMapper;
-using Florama.Application.Interfaces;
+﻿using Florama.Application.Interfaces;
 using FluentValidation;
 using System.Reflection;
 

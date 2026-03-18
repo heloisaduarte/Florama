@@ -52,7 +52,7 @@ namespace Florama.Api.Controllers
         {
             foreach (var error in validationResult.Errors)
             {
-                Erros.Add(error.ErrorMessage);
+                _notifications.Handle(new DomainNotification("Validation", error.ErrorMessage));
             }
 
             return CustomResponse();

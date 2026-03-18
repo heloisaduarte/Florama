@@ -12,5 +12,14 @@ namespace Florama.Domain.Entities
             Nome = nome;
             Descricao = descricao;
         }
+
+        public void DefinirNome(string nome)
+        {
+            Nome = nome;
+        }
+        public void DefinirDescricao(string descricao)
+        {
+            Descricao = descricao;
+        }
     }
 }

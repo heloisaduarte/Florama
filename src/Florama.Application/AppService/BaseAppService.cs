@@ -41,8 +41,7 @@ namespace Florama.Application.AppService
             _notifications.Handle(new DomainNotification(ex.GetType().Name, ex.Message));
         }
 
-        protected bool Validar<TValidator, TEntity>(TValidator validator, TEntity entity)
-            where TValidator : AbstractValidator<TEntity>
+        protected bool Validar<TEntity>(IValidator<TEntity> validator, TEntity entity)
             where TEntity : class
         {
             var result = validator.Validate(entity);
