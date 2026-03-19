@@ -8,18 +8,16 @@ namespace Florama.Domain.Validators
         public CategoriaValidator()
         {
             RuleFor(x => x.Nome)
-         .NotEmpty()
-         .WithMessage("Nome da categoria é obrigatório")
-         .MaximumLength(100)
-         .WithMessage("Nome da categoria deve ter no máximo 50 caracteres")
-         .MinimumLength(3)
-         .WithMessage("Nome deve ter no mínimo 3 caracteres");
+                .Must(nome => !string.IsNullOrWhiteSpace(nome))
+                .WithMessage("Nome da categoria é obrigatório.")
+                .Length(3, 100)
+                .WithMessage("Nome deve ter entre 3 e 100 caracteres.");
 
             RuleFor(x => x.Descricao)
-         .MaximumLength(500)
-         .WithMessage("Descrição deve ter no máximo 500 caracteres")
-         .MinimumLength(10)
-         .WithMessage("Nome deve ter no mínimo 3 caracteres");
+                .Must(descricao => !string.IsNullOrWhiteSpace(descricao))
+                .WithMessage("Descrição da categoria é obrigatória.")
+                .Length(3, 500)
+                .WithMessage("Descrição deve ter entre 3 e 500 caracteres.");
         }
     }
 }

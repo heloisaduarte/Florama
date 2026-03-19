@@ -29,7 +29,7 @@ namespace Florama.Application.AppServices
 
         public async Task<CategoriaDto> Criar(CategoriaDto dto)
         {
-            var categoria = _mapper.Map<Categoria>(dto);
+            var categoria = new Categoria(dto.Nome, dto.Descricao);
 
             if (!Validar(_categoriaValidator, categoria))
                 return null;

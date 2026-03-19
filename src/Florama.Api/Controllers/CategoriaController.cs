@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Florama.Api.Request;
+using Florama.Api.Request.Categoria;
 using Florama.Api.ViewModel;
 using Florama.Application.DTOs;
 using Florama.Application.Interfaces;

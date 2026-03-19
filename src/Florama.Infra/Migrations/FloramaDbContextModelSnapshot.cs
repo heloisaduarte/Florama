@@ -63,6 +63,63 @@ namespace Florama.Data.Migrations
 
                     b.ToTable("CATEGORIA", (string)null);
                 });
+
+            modelBuilder.Entity("Florama.Domain.Entities.Produto", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CategoriaId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("CATEGORIAID");
+
+                    b.Property<DateTime?>("DataAlteracao")
+                        .HasColumnType("DATETIME2")
+                        .HasColumnName("DATAALTERACAO");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("DATETIME2")
+                        .HasColumnName("DATACRIACAO");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR")
+                        .HasColumnName("NOME");
+
+                    b.Property<long?>("UsuarioAlteracao")
+                        .HasColumnType("bigint")
+                        .HasColumnName("USUARIOALTERACAO");
+
+                    b.Property<long>("UsuarioCriacao")
+                        .HasColumnType("bigint")
+                        .HasColumnName("USUARIOCRIACAO");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("DECIMAL")
+                        .HasColumnName("VALOR");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoriaId");
+
+                    b.ToTable("PRODUTO", (string)null);
+                });
+
+            modelBuilder.Entity("Florama.Domain.Entities.Produto", b =>
+                {
+                    b.HasOne("Florama.Domain.Entities.Categoria", "Categoria")
+                        .WithMany()
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Categoria");
+                });
 #pragma warning restore 612, 618
         }
     }

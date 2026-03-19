@@ -9,6 +9,7 @@ namespace Florama.Application.AutoMapper
         public ApplicationMappingProfile()
         {
             CreateMap<CategoriaDto, Categoria>().ReverseMap();
+            CreateMap<ProdutoDto, Produto>().ReverseMap();
         }
     }
 }
