@@ -6,5 +6,7 @@
         public string Nome { get; set; }
         public decimal Valor { get; set; }
         public long CategoriaId { get; set; }
+        public List<ProdutoFotoDto> Fotos { get; set; } = new();
+
     }
 }

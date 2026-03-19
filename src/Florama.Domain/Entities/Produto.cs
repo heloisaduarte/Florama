@@ -8,7 +8,7 @@ namespace Florama.Domain.Entities
         public decimal Valor { get; private set; }
         public long CategoriaId { get; private set; }
         public Categoria Categoria { get; private set; }
-
+        public ICollection<ProdutoFoto> Fotos { get; private set; } = new List<ProdutoFoto>();
         public Produto()
         {
         }
@@ -39,6 +39,62 @@ namespace Florama.Domain.Entities
 
             Categoria = categoria;
             CategoriaId = categoria.Id;
+        }
+
+        public void AdicionarFoto(string url)
+        {
+            var ordem = Fotos.Any() ? Fotos.Max(f => f.Ordem) + 1 : 1;
+            var foto = new ProdutoFoto();
+
+            foto.DefinirUrl(url);
+            foto.DefinirOrdem(ordem); 
+            foto.DefinirProduto(this);
+
+            Fotos.Add(foto);
+
+            ValidarFotos();
+        }
+        public void RemoverFoto(long fotoId)
+        {
+            var foto = Fotos.FirstOrDefault(f => f.Id == fotoId);
+
+            if (foto is null)
+                throw new DomainException("Foto não encontrada");
+
+            Fotos.Remove(foto);
+
+            ReordenarAutomaticamente();
+        }
+        public void ReordenarFotos(Dictionary<long, int> novasOrdens)
+        {
+            foreach (var foto in Fotos)
+            {
+                if (novasOrdens.TryGetValue(foto.Id, out var novaOrdem))
+                {
+                    foto.DefinirOrdem(novaOrdem);
+                }
+            }
+
+            ValidarFotos();
+        }
+        private void ReordenarAutomaticamente()
+        {
+            var ordem = 1;
+
+            foreach (var foto in Fotos.OrderBy(f => f.Ordem))
+            {
+                foto.DefinirOrdem(ordem);
+                ordem++;
+            }
+        }
+        public void ValidarFotos()
+        {
+            var ordensDuplicadas = Fotos
+                .GroupBy(f => f.Ordem)
+                .Any(g => g.Count() > 1);
+
+            if (ordensDuplicadas)
+                throw new DomainException("Não pode haver fotos com a mesma ordem");
         }
     }
 }

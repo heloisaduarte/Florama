@@ -2,6 +2,7 @@
 using Florama.Application.DTOs;
 using Florama.Application.Interfaces;
 using Florama.Domain.Abstractions;
+using Florama.Domain.DomainObjects;
 using Florama.Domain.Entities;
 using Florama.Domain.Interfaces.Repositories;
 using Florama.Domain.Notifications;
@@ -32,7 +33,7 @@ namespace Florama.Application.AppService
 
         public async Task<ProdutoDto> Atualizar(ProdutoDto dto)
         {
-            var produto = await _produtoRepository.GetByIdAsync(dto.Id);
+            var produto = await _produtoRepository.ObterPorId(dto.Id);
 
             if(produto is null)
             {
@@ -62,6 +63,73 @@ namespace Florama.Application.AppService
             return _mapper.Map<ProdutoDto>(produto);
         }
 
+        public async Task AdicionarFoto(long produtoId, string url)
+        {
+            var produto = await _produtoRepository.ObterPorId(produtoId);
+
+            if (produto is null) 
+            {
+                NotificarErro("Produto não encontrado.");
+                return;
+            }
+
+            produto.AdicionarFoto(url);
+
+            await _produtoRepository.Update(produto);
+
+            await CommitAsync();
+        }
+
+        public async Task RemoverFoto(long produtoId, long fotoId)
+        {
+            var produto = await _produtoRepository.ObterPorId(produtoId);
+
+            if (produto is null)
+            {
+                NotificarErro("Produto não encontrado.");
+                return;
+            }
+
+            try
+            {
+                produto.RemoverFoto(fotoId);
+            }
+            catch (DomainException ex)
+            {
+                NotificarErro(ex.Message);
+                return;
+            }
+
+            await _produtoRepository.Update(produto);
+
+            await CommitAsync();
+        }
+
+        public async Task ReordenarFotos(long produtoId, Dictionary<long, int> novasOrdens)
+        {
+            var produto = await _produtoRepository.ObterPorId(produtoId);
+
+            if (produto is null)
+            {
+                NotificarErro("Produto não encontrado.");
+                return;
+            }
+
+            try
+            {
+                produto.ReordenarFotos(novasOrdens);
+            }
+            catch (DomainException ex)
+            {
+                NotificarErro(ex.Message);
+                return;
+            }
+
+            await _produtoRepository.Update(produto);
+
+            await CommitAsync();
+        }
+        
         public async Task<ProdutoDto> Criar(ProdutoDto dto)
         {
             var categoria = await _categoriaRepository.GetByIdAsync(dto.CategoriaId);
@@ -78,6 +146,12 @@ namespace Florama.Application.AppService
             produto.DefinirNome(dto.Nome);
             produto.DefinirCategoria(categoria);
 
+
+            foreach (var foto in dto.Fotos)
+            {
+                produto.AdicionarFoto(foto.Url );
+            }
+
             if (!Validar(_produtoValidator, produto))
                 return null;
 
@@ -87,17 +161,16 @@ namespace Florama.Application.AppService
 
             return _mapper.Map<ProdutoDto>(produto);
         }
-
         public async Task<ProdutoDto> ObterPorId(long id)
         {
-            var produto = await _produtoRepository.GetByIdAsync(id);
+            var produto = await _produtoRepository.ObterPorId(id);
 
             return _mapper.Map<ProdutoDto>(produto);
         }
 
         public async Task<IEnumerable<ProdutoDto>> ObterTodos()
         {
-            var produtos = await _produtoRepository.GetAllAsync();
+            var produtos = await _produtoRepository.ObterTodos();
 
             return _mapper.Map<IEnumerable<ProdutoDto>>(produtos);
         }

@@ -16,7 +16,11 @@ namespace Florama.Api.AutoMapper
             CreateMap<CategoriaDto, AtualizarCategoriaRequest>().ReverseMap();
 
             //PRODUTO
-            CreateMap<ProdutoDto, ProdutoViewModel>().ReverseMap();
+
+
+            CreateMap<ProdutoFotoDto, ProdutoFotoViewModel>().ReverseMap();
+            CreateMap<ProdutoDto, ProdutoViewModel>()
+                .ForMember(dest => dest.Fotos, opt => opt.MapFrom(src => src.Fotos)).ReverseMap();
             CreateMap<ProdutoDto, CriarProdutoRequest>().ReverseMap();
             CreateMap<ProdutoDto, AtualizarProdutoRequest>().ReverseMap();
         }

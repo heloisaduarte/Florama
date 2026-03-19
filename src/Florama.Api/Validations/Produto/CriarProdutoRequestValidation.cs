@@ -19,5 +19,17 @@ public class CriarProdutoRequestValidation : AbstractValidator<CriarProdutoReque
             .WithMessage("CategoriaId do produto é obrigatório")
             .NotEqual(0)
             .WithMessage("CategoriaId do produto deve ser maior que zero");
+
+        RuleFor(x => x.Fotos)
+            .NotNull().WithMessage("Fotos são obrigatórias.")
+            .Must(fotos => fotos.Any())
+            .WithMessage("O produto deve ter pelo menos uma foto.");
+
+        RuleForEach(x => x.Fotos)
+            .SetValidator(new AdicionarFotoRequestValidation());
+
+        RuleFor(x => x.Fotos)
+            .Must(fotos => fotos.Count <= 5)
+            .WithMessage("O produto pode ter no máximo 5 fotos.");
     }
 } 

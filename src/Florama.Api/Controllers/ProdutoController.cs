@@ -35,6 +35,24 @@ namespace Florama.Api.Controllers
             return CustomResponse(_mapper.Map<ProdutoViewModel>(result));
         }
 
+        [HttpPost("adicionar-fotos/{produtoId}")]
+        public async Task<IActionResult> AdicionarFoto(long produtoId, AdicionarFotoRequest request)
+        {
+            await _appService.AdicionarFoto(produtoId, request.Url);
+
+            return CustomResponse();
+        }
+
+        [HttpPut("ordernar-fotos/{produtoId}")]
+        public async Task<IActionResult> Reordenar(long produtoId, ReordenarFotosRequest request)
+        {
+            var dict = request.Fotos.ToDictionary(x => x.Id, x => x.Ordem);
+
+            await _appService.ReordenarFotos(produtoId, dict);
+
+            return CustomResponse();
+        }
+
         [HttpPut("atualizar")]
         public async Task<IActionResult> Atualizar(AtualizarProdutoRequest request)
         {
@@ -43,6 +61,14 @@ namespace Florama.Api.Controllers
             var result = await _appService.Atualizar(dto);
 
             return CustomResponse(_mapper.Map<ProdutoViewModel>(result));
+        }
+
+        [HttpDelete("remover-fotos/{fotoId}")]
+        public async Task<IActionResult> RemoverFoto(long id, long fotoId)
+        {
+            await _appService.RemoverFoto(id, fotoId);
+
+            return CustomResponse();
         }
 
         [HttpGet("obter-todos")]

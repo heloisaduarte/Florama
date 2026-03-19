@@ -110,6 +110,52 @@ namespace Florama.Data.Migrations
                     b.ToTable("PRODUTO", (string)null);
                 });
 
+            modelBuilder.Entity("Florama.Domain.Entities.ProdutoFoto", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime?>("DataAlteracao")
+                        .HasColumnType("DATETIME2")
+                        .HasColumnName("DATAALTERACAO");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("DATETIME2")
+                        .HasColumnName("DATACRIACAO");
+
+                    b.Property<int>("Ordem")
+                        .HasColumnType("INT")
+                        .HasColumnName("ORDEM");
+
+                    b.Property<long>("ProdutoId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("PRODUTOID");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("VARCHAR")
+                        .HasColumnName("URL");
+
+                    b.Property<long?>("UsuarioAlteracao")
+                        .HasColumnType("bigint")
+                        .HasColumnName("USUARIOALTERACAO");
+
+                    b.Property<long>("UsuarioCriacao")
+                        .HasColumnType("bigint")
+                        .HasColumnName("USUARIOCRIACAO");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.ToTable("PRODUTOFOTO", (string)null);
+                });
+
             modelBuilder.Entity("Florama.Domain.Entities.Produto", b =>
                 {
                     b.HasOne("Florama.Domain.Entities.Categoria", "Categoria")
@@ -119,6 +165,22 @@ namespace Florama.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Categoria");
+                });
+
+            modelBuilder.Entity("Florama.Domain.Entities.ProdutoFoto", b =>
+                {
+                    b.HasOne("Florama.Domain.Entities.Produto", "Produto")
+                        .WithMany("Fotos")
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Produto");
+                });
+
+            modelBuilder.Entity("Florama.Domain.Entities.Produto", b =>
+                {
+                    b.Navigation("Fotos");
                 });
 #pragma warning restore 612, 618
         }
