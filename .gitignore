@@ -31,3 +31,17 @@ coverage/
 
 # Environment files
 .env
+
+# Configurações sensíveis
+**/appsettings.Development.json
+**/appsettings.Local.json
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Pasta de publish
+publish/
+
+# Arquivos de debug
+*.pdb
