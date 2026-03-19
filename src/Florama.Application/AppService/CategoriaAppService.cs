@@ -6,7 +6,6 @@ using Florama.Domain.Abstractions;
 using Florama.Domain.Entities;
 using Florama.Domain.Interfaces.Repositories;
 using Florama.Domain.Notifications;
-using Florama.Domain.Validators;
 using FluentValidation;
 
 namespace Florama.Application.AppServices
@@ -71,6 +70,13 @@ namespace Florama.Application.AppServices
             var categoria = await _repository.GetAllAsync();
 
             return _mapper.Map<IEnumerable<CategoriaDto>>(categoria);
+        }
+
+        public async Task<CategoriaDto> ObterPorId(long id)
+        {
+            var categoria = await _repository.GetByIdAsync(id);
+
+            return _mapper.Map<CategoriaDto>(categoria);
         }
     }
 }

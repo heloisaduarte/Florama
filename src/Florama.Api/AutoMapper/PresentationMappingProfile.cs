@@ -11,6 +11,7 @@ namespace Florama.Api.AutoMapper
         {
             CreateMap<CategoriaDto, CategoriaViewModel>().ReverseMap();
             CreateMap<CategoriaDto, CriarCategoriaRequest>().ReverseMap();
+            CreateMap<CategoriaDto, AtualizarCategoriaRequest>().ReverseMap();
         }
     }
 }

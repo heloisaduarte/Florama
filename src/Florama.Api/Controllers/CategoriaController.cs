@@ -40,7 +40,7 @@ namespace Florama.Api.Controllers
         {
             var dto = _mapper.Map<CategoriaDto>(request);
 
-            var result = await _appService.Criar(dto);
+            var result = await _appService.Atualizar(dto);
 
             return CustomResponse(_mapper.Map<CategoriaViewModel>(result));
         }
@@ -51,6 +51,14 @@ namespace Florama.Api.Controllers
             var result = await _appService.ObterTodos();
 
             return CustomResponse(_mapper.Map<IEnumerable<CategoriaViewModel>>(result));
+        }
+
+        [HttpGet("obter-por-id/{id}")]
+        public async Task<IActionResult> ObterPorId(long id)
+        {
+            var result = await _appService.ObterPorId(id);
+
+            return CustomResponse(_mapper.Map<CategoriaViewModel>(result));
         }
     }
 }

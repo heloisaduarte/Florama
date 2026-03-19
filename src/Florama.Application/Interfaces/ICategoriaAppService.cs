@@ -7,5 +7,6 @@ namespace Florama.Application.Interfaces
         Task<CategoriaDto> Criar(CategoriaDto dto);
         Task<CategoriaDto> Atualizar(CategoriaDto dto);
         Task<IEnumerable<CategoriaDto>> ObterTodos();
+        Task<CategoriaDto> ObterPorId(long id);
     }
 }
