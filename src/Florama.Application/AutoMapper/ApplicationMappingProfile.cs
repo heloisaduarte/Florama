@@ -10,8 +10,12 @@ namespace Florama.Application.AutoMapper
         {
             CreateMap<CategoriaDto, Categoria>().ReverseMap();
             CreateMap<ProdutoDto, Produto>()
-                .ForMember(dest => dest.Fotos, opt => opt.MapFrom(src => src.Fotos)).ReverseMap();
+                .ForMember(dest => dest.Fotos, opt => opt.MapFrom(src => src.Fotos))
+                .ForMember(dest => dest.Estoque, opt => opt.MapFrom(src => src.Estoque))
+                .ReverseMap();
             CreateMap<ProdutoFotoDto, ProdutoFoto>().ReverseMap();
+            CreateMap<EstoqueDto, Estoque>().ReverseMap();
+            CreateMap<EstoqueMovimentacaoDto, EstoqueMovimentacao>().ReverseMap();
         }
     }
 }

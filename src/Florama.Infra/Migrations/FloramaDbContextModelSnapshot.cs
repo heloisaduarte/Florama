@@ -22,6 +22,91 @@ namespace Florama.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Estoque", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime?>("DataAlteracao")
+                        .HasColumnType("DATETIME2")
+                        .HasColumnName("DATAALTERACAO");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("DATETIME2")
+                        .HasColumnName("DATACRIACAO");
+
+                    b.Property<long>("ProdutoId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("PRODUTOID");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("INT")
+                        .HasColumnName("QUANTIDADE");
+
+                    b.Property<long?>("UsuarioAlteracao")
+                        .HasColumnType("bigint")
+                        .HasColumnName("USUARIOALTERACAO");
+
+                    b.Property<long>("UsuarioCriacao")
+                        .HasColumnType("bigint")
+                        .HasColumnName("USUARIOCRIACAO");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProdutoId")
+                        .IsUnique();
+
+                    b.ToTable("ESTOQUE", (string)null);
+                });
+
+            modelBuilder.Entity("EstoqueMovimentacao", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime?>("DataAlteracao")
+                        .HasColumnType("DATETIME2")
+                        .HasColumnName("DATAALTERACAO");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("DATETIME2")
+                        .HasColumnName("DATACRIACAO");
+
+                    b.Property<long>("ProdutoId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("PRODUTOID");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("INT")
+                        .HasColumnName("QUANTIDADE");
+
+                    b.Property<int>("Tipo")
+                        .HasColumnType("INT")
+                        .HasColumnName("TIPO");
+
+                    b.Property<long?>("UsuarioAlteracao")
+                        .HasColumnType("bigint")
+                        .HasColumnName("USUARIOALTERACAO");
+
+                    b.Property<long>("UsuarioCriacao")
+                        .HasColumnType("bigint")
+                        .HasColumnName("USUARIOCRIACAO");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.ToTable("ESTOQUEMOVIMENTACAO", (string)null);
+                });
+
             modelBuilder.Entity("Florama.Domain.Entities.Categoria", b =>
                 {
                     b.Property<long>("Id")
@@ -156,6 +241,28 @@ namespace Florama.Data.Migrations
                     b.ToTable("PRODUTOFOTO", (string)null);
                 });
 
+            modelBuilder.Entity("Estoque", b =>
+                {
+                    b.HasOne("Florama.Domain.Entities.Produto", "Produto")
+                        .WithOne("Estoque")
+                        .HasForeignKey("Estoque", "ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Produto");
+                });
+
+            modelBuilder.Entity("EstoqueMovimentacao", b =>
+                {
+                    b.HasOne("Florama.Domain.Entities.Produto", "Produto")
+                        .WithMany()
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Produto");
+                });
+
             modelBuilder.Entity("Florama.Domain.Entities.Produto", b =>
                 {
                     b.HasOne("Florama.Domain.Entities.Categoria", "Categoria")
@@ -180,6 +287,9 @@ namespace Florama.Data.Migrations
 
             modelBuilder.Entity("Florama.Domain.Entities.Produto", b =>
                 {
+                    b.Navigation("Estoque")
+                        .IsRequired();
+
                     b.Navigation("Fotos");
                 });
 #pragma warning restore 612, 618

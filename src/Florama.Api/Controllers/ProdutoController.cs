@@ -86,5 +86,12 @@ namespace Florama.Api.Controllers
 
             return CustomResponse(_mapper.Map<ProdutoViewModel>(result));
         }
+        [HttpGet("em-estoque")]
+        public async Task<IActionResult> ObterEmEstoque()
+        {
+            var result = await _appService.ObterEmEstoque();
+
+            return CustomResponse(_mapper.Map<IEnumerable<ProdutoViewModel>>(result));
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace Florama.Domain.Entities
         public long CategoriaId { get; private set; }
         public Categoria Categoria { get; private set; }
         public ICollection<ProdutoFoto> Fotos { get; private set; } = new List<ProdutoFoto>();
+        public Estoque Estoque { get; private set; }
         public Produto()
         {
         }

@@ -16,10 +16,20 @@ namespace Florama.Data.Repositories
             _db = db;
         }
 
+        public async Task<IEnumerable<Produto>> ObterEmEstoque()
+        {
+            return await _db.Set<Produto>()
+                .Include(c => c.Fotos.OrderBy(f => f.Ordem))
+                .Include(c => c.Estoque)
+                .Where(c => c.Estoque.Quantidade > 0)
+                .AsNoTracking().ToListAsync();
+
+        }
         public async Task<IEnumerable<Produto>> ObterTodos()
         {
             return await _db.Set<Produto>()
                 .Include(c => c.Fotos.OrderBy(f => f.Ordem))
+                .Include(c => c.Estoque)
                 .AsNoTracking().ToListAsync();
 
         }
@@ -27,6 +37,7 @@ namespace Florama.Data.Repositories
         {
             return await _db.Set<Produto>()
                 .Include(c => c.Fotos.OrderBy(f => f.Ordem))
+                .Include(c => c.Estoque)
                 .AsNoTracking().FirstOrDefaultAsync();
 
         }

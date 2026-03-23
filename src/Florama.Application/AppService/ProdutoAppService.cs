@@ -16,19 +16,21 @@ namespace Florama.Application.AppService
         private readonly IValidator<Produto> _produtoValidator;
         private readonly IProdutoRepository _produtoRepository;
         private readonly ICategoriaRepository _categoriaRepository;
-
+        private readonly IEstoqueRepository _estoqueRepository;
         public ProdutoAppService(
             IUnitOfWork uow,
             IHandler<DomainNotification> notifications,
             IMapper mapper,
             IProdutoRepository produtoRepository,
             ICategoriaRepository categoriaRepository,
-            IValidator<Produto> produtoValidator) : base(uow, notifications)
+            IValidator<Produto> produtoValidator,
+            IEstoqueRepository estoqueRepository) : base(uow, notifications)
         {
             _mapper = mapper;
             _produtoRepository = produtoRepository;
             _categoriaRepository = categoriaRepository;
             _produtoValidator = produtoValidator;
+            _estoqueRepository = estoqueRepository;
         }
 
         public async Task<ProdutoDto> Atualizar(ProdutoDto dto)
@@ -146,6 +148,9 @@ namespace Florama.Application.AppService
             produto.DefinirNome(dto.Nome);
             produto.DefinirCategoria(categoria);
 
+            var estoque = new Estoque();
+            estoque.DefinirProduto(produto);
+            estoque.Adicionar(dto.Estoque.Quantidade);
 
             foreach (var foto in dto.Fotos)
             {
@@ -156,6 +161,7 @@ namespace Florama.Application.AppService
                 return null;
 
             await _produtoRepository.Add(produto);
+            await _estoqueRepository.Add(estoque);
 
             await CommitAsync();
 
@@ -171,6 +177,13 @@ namespace Florama.Application.AppService
         public async Task<IEnumerable<ProdutoDto>> ObterTodos()
         {
             var produtos = await _produtoRepository.ObterTodos();
+
+            return _mapper.Map<IEnumerable<ProdutoDto>>(produtos);
+        }
+
+        public async Task<IEnumerable<ProdutoDto>> ObterEmEstoque()
+        {
+            var produtos = await _produtoRepository.ObterEmEstoque();
 
             return _mapper.Map<IEnumerable<ProdutoDto>>(produtos);
         }
