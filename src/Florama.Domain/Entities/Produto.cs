@@ -17,10 +17,10 @@ namespace Florama.Domain.Entities
         public void DefinirNome(string nome)
         {
             if (string.IsNullOrWhiteSpace(nome))
-                throw new DomainException("Nome é obrigatório");
+                throw new DomainException("Nome é obrigatório.");
 
             if (nome.Length < 3 || nome.Length > 100)
-                throw new DomainException("Nome deve ter entre 3 e 100 caracteres");
+                throw new DomainException("Nome deve ter entre 3 e 100 caracteres.");
 
             Nome = nome;
         }
@@ -28,7 +28,7 @@ namespace Florama.Domain.Entities
         public void DefinirValor(decimal valor)
         {
             if (valor <= 0)
-                throw new DomainException("Valor deve ser maior que zero");
+                throw new DomainException("Valor deve ser maior que zero.");
 
             Valor = valor;
         }
@@ -36,7 +36,7 @@ namespace Florama.Domain.Entities
         public void DefinirCategoria(Categoria categoria)
         {
             if (categoria is null)
-                throw new DomainException("Categoria é obrigatória");
+                throw new DomainException("Categoria é obrigatória.");
 
             Categoria = categoria;
             CategoriaId = categoria.Id;
@@ -60,7 +60,7 @@ namespace Florama.Domain.Entities
             var foto = Fotos.FirstOrDefault(f => f.Id == fotoId);
 
             if (foto is null)
-                throw new DomainException("Foto não encontrada");
+                throw new DomainException("Foto não encontrada.");
 
             Fotos.Remove(foto);
 
@@ -95,7 +95,7 @@ namespace Florama.Domain.Entities
                 .Any(g => g.Count() > 1);
 
             if (ordensDuplicadas)
-                throw new DomainException("Não pode haver fotos com a mesma ordem");
+                throw new DomainException("Não pode haver fotos com a mesma ordem.");
         }
     }
 }

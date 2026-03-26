@@ -12,10 +12,11 @@ namespace Florama.Domain.Entities
         public ProdutoFoto()
         {
         }
+
         public void DefinirProduto(Produto produto)
         {
             if (produto is null)
-                throw new DomainException("Produto é obrigatório");
+                throw new DomainException("Produto é obrigatório.");
 
             Produto = produto;
             ProdutoId = produto.Id;
@@ -24,10 +25,10 @@ namespace Florama.Domain.Entities
         public void DefinirUrl(string url)
         {
             if (string.IsNullOrWhiteSpace(url))
-                throw new DomainException("Url da foto é obrigatória");
+                throw new DomainException("Url da foto é obrigatória.");
 
             if (url.Length > 500)
-                throw new DomainException("Url muito longa");
+                throw new DomainException("Url muito longa.");
 
             Url = url;
         }
@@ -35,7 +36,7 @@ namespace Florama.Domain.Entities
         public void DefinirOrdem(int ordem)
         {
             if (ordem <= 0)
-                throw new DomainException("Ordem deve ser maior que zero");
+                throw new DomainException("Ordem deve ser maior que zero.");
 
             Ordem = ordem;
         }

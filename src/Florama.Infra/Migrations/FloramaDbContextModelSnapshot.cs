@@ -241,6 +241,45 @@ namespace Florama.Data.Migrations
                     b.ToTable("PRODUTOFOTO", (string)null);
                 });
 
+            modelBuilder.Entity("Florama.Domain.Entities.Usuario", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime?>("DataAlteracao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateOnly>("DataNascimento")
+                        .HasColumnType("date")
+                        .HasColumnName("DATANASCIMENTO");
+
+                    b.Property<int>("IsAdmin")
+                        .HasColumnType("int")
+                        .HasColumnName("ISADMIN");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("NOME");
+
+                    b.Property<long?>("UsuarioAlteracao")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UsuarioCriacao")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("USUARIO", (string)null);
+                });
+
             modelBuilder.Entity("Estoque", b =>
                 {
                     b.HasOne("Florama.Domain.Entities.Produto", "Produto")
@@ -283,6 +322,72 @@ namespace Florama.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Produto");
+                });
+
+            modelBuilder.Entity("Florama.Domain.Entities.Usuario", b =>
+                {
+                    b.OwnsOne("Florama.Domain.ValueObjects.Cpf", "Cpf", b1 =>
+                        {
+                            b1.Property<long>("UsuarioId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<string>("CpfLimpo")
+                                .IsRequired()
+                                .HasColumnType("varchar(11)")
+                                .HasColumnName("CPF");
+
+                            b1.HasKey("UsuarioId");
+
+                            b1.ToTable("USUARIO");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UsuarioId");
+                        });
+
+                    b.OwnsOne("Florama.Domain.ValueObjects.Email", "Email", b1 =>
+                        {
+                            b1.Property<long>("UsuarioId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<string>("Endereco")
+                                .IsRequired()
+                                .HasColumnType("varchar(200)")
+                                .HasColumnName("EMAIL");
+
+                            b1.HasKey("UsuarioId");
+
+                            b1.ToTable("USUARIO");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UsuarioId");
+                        });
+
+                    b.OwnsOne("Florama.Domain.ValueObjects.Telefone", "Telefone", b1 =>
+                        {
+                            b1.Property<long>("UsuarioId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<string>("Numero")
+                                .IsRequired()
+                                .HasColumnType("varchar(11)")
+                                .HasColumnName("TELEFONE");
+
+                            b1.HasKey("UsuarioId");
+
+                            b1.ToTable("USUARIO");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UsuarioId");
+                        });
+
+                    b.Navigation("Cpf")
+                        .IsRequired();
+
+                    b.Navigation("Email")
+                        .IsRequired();
+
+                    b.Navigation("Telefone")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Florama.Domain.Entities.Produto", b =>
