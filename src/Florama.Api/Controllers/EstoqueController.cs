@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Florama.Api.Request.Estoque;
+using Florama.Api.ViewModel.Estoque;
 using Florama.Application.DTOs;
 using Florama.Application.Interfaces;
 using Florama.Domain.Abstractions;
 using Florama.Domain.Notifications;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Florama.Api.Controllers
@@ -35,11 +37,12 @@ namespace Florama.Api.Controllers
         }
 
         [HttpGet("obter-por-produto/{produtoId}")]
+        [AllowAnonymous]
         public async Task<IActionResult> ObterPorProdutoId(long produtoId)
         {
             var result = await _estoqueAppService.ObterPorProdutoId(produtoId);
 
-            return CustomResponse(result);
+            return CustomResponse(_mapper.Map<EstoqueViewModel>(result));
         }
     }
 }

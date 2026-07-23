@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Florama.Api.Request.Categoria;
-using Florama.Api.ViewModel;
+using Florama.Api.ViewModel.Categoria;
 using Florama.Application.DTOs;
 using Florama.Application.Interfaces;
 using Florama.Domain.Abstractions;
 using Florama.Domain.Notifications;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Florama.Api.Controllers
@@ -46,6 +47,7 @@ namespace Florama.Api.Controllers
         }
 
         [HttpGet("obter-todos")]
+        [AllowAnonymous]
         public async Task<IActionResult> ObterTodos()
         {
             var result = await _appService.ObterTodos();
@@ -54,6 +56,7 @@ namespace Florama.Api.Controllers
         }
 
         [HttpGet("obter-por-id/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> ObterPorId(long id)
         {
             var result = await _appService.ObterPorId(id);

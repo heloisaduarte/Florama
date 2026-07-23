@@ -11,18 +11,78 @@ namespace Florama.Domain.Entities
         public Cpf Cpf { get; private set; }
         public DateOnly DataNascimento { get; private set; }
         public Telefone Telefone { get; private set; }
+
         public bool IsAdmin { get; private set; }
+
+        public string SenhaHash { get; private set; }
+
+        public bool Ativo { get; private set; }
+
+        public bool EmailConfirmado { get; private set; }
+
+        public string? RefreshToken { get; private set; }
+
+        public DateTime? RefreshTokenExpiracao { get; private set; }
+
+        public DateTime? UltimoLogin { get; private set; }
 
         protected Usuario() { }
 
-        public Usuario(string nome, string email, string cpf, DateOnly dataNascimento, string telefone, bool isAdmin)
+        public Usuario(
+            string nome,
+            string email,
+            string cpf,
+            DateOnly dataNascimento,
+            string telefone,
+            bool isAdmin,
+            string senhaHash)
         {
             DefinirNome(nome);
             DefinirEmail(email);
             DefinirCpf(cpf);
             DefinirDataNascimento(dataNascimento);
             DefinirTelefone(telefone);
+
             IsAdmin = isAdmin;
+            SenhaHash = senhaHash;
+
+            Ativo = true;
+            EmailConfirmado = false;
+        }
+
+        public void AlterarSenha(string senhaHash)
+        {
+            if (string.IsNullOrWhiteSpace(senhaHash))
+                throw new DomainException("Senha inválida.");
+
+            SenhaHash = senhaHash;
+        }
+
+        public void AtualizarRefreshToken(string refreshToken, DateTime expiracao)
+        {
+            RefreshToken = refreshToken;
+            RefreshTokenExpiracao = expiracao;
+        }
+
+        public void RemoverRefreshToken()
+        {
+            RefreshToken = null;
+            RefreshTokenExpiracao = null;
+        }
+
+        public void RegistrarLogin()
+        {
+            UltimoLogin = DateTime.UtcNow;
+        }
+
+        public void Ativar()
+        {
+            Ativo = true;
+        }
+
+        public void Desativar()
+        {
+            Ativo = false;
         }
 
         public bool PodeCadastrar()
@@ -75,6 +135,5 @@ namespace Florama.Domain.Entities
 
             Telefone = new Telefone(telefone);
         }
-
     }
 }

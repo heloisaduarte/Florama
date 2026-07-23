@@ -1,4 +1,6 @@
-﻿using Florama.Domain.Abstractions;
+﻿using Florama.Application.Interfaces.Security;
+using Florama.Data.Services.Security;
+using Florama.Domain.Abstractions;
 using Florama.Infrastructure.Data;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
@@ -12,6 +14,8 @@ namespace Florama.Infra.Data
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             return services;
         }

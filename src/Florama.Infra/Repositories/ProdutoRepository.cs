@@ -9,11 +9,8 @@ namespace Florama.Data.Repositories
 {
     public class ProdutoRepository : Repository<Produto>, IProdutoRepository
     {
-        private readonly FloramaDbContext _db;
-
         public ProdutoRepository(FloramaDbContext db) : base(db)
         {
-            _db = db;
         }
 
         public async Task<IEnumerable<Produto>> ObterEmEstoque()
@@ -38,7 +35,8 @@ namespace Florama.Data.Repositories
             return await _db.Set<Produto>()
                 .Include(c => c.Fotos.OrderBy(f => f.Ordem))
                 .Include(c => c.Estoque)
-                .AsNoTracking().FirstOrDefaultAsync();
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == Id);
 
         }
     }

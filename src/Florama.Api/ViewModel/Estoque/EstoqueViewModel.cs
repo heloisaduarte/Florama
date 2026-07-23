@@ -1,4 +1,4 @@
-﻿namespace Florama.Api.ViewModel
+﻿namespace Florama.Api.ViewModel.Estoque
 {
     public class EstoqueViewModel
     {

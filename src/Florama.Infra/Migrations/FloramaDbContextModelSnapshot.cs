@@ -250,6 +250,10 @@ namespace Florama.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit")
+                        .HasColumnName("ATIVO");
+
                     b.Property<DateTime?>("DataAlteracao")
                         .HasColumnType("datetime2");
 
@@ -260,14 +264,35 @@ namespace Florama.Data.Migrations
                         .HasColumnType("date")
                         .HasColumnName("DATANASCIMENTO");
 
-                    b.Property<int>("IsAdmin")
-                        .HasColumnType("int")
+                    b.Property<bool>("EmailConfirmado")
+                        .HasColumnType("bit")
+                        .HasColumnName("EMAILCONFIRMADO");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit")
                         .HasColumnName("ISADMIN");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("varchar(200)")
                         .HasColumnName("NOME");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("varchar(500)")
+                        .HasColumnName("REFRESHTOKEN");
+
+                    b.Property<DateTime?>("RefreshTokenExpiracao")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("REFRESHTOKENEXPIRACAO");
+
+                    b.Property<string>("SenhaHash")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("SENHAHASH");
+
+                    b.Property<DateTime?>("UltimoLogin")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ULTIMOLOGIN");
 
                     b.Property<long?>("UsuarioAlteracao")
                         .HasColumnType("bigint");

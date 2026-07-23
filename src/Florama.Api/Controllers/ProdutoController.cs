@@ -5,6 +5,7 @@ using Florama.Application.DTOs;
 using Florama.Application.Interfaces;
 using Florama.Domain.Abstractions;
 using Florama.Domain.Notifications;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Florama.Api.Controllers
@@ -80,13 +81,16 @@ namespace Florama.Api.Controllers
         }
 
         [HttpGet("obter-por-id/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> ObterPorId(long id)
         {
             var result = await _appService.ObterPorId(id);
 
             return CustomResponse(_mapper.Map<ProdutoViewModel>(result));
         }
+
         [HttpGet("em-estoque")]
+        [AllowAnonymous]
         public async Task<IActionResult> ObterEmEstoque()
         {
             var result = await _appService.ObterEmEstoque();

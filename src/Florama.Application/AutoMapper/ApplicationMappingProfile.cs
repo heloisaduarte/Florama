@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Florama.Application.DTOs;
+using Florama.Application.DTOs.Auth;
 using Florama.Domain.Entities;
 
 namespace Florama.Application.AutoMapper
@@ -16,6 +17,10 @@ namespace Florama.Application.AutoMapper
             CreateMap<ProdutoFotoDto, ProdutoFoto>().ReverseMap();
             CreateMap<EstoqueDto, Estoque>().ReverseMap();
             CreateMap<EstoqueMovimentacaoDto, EstoqueMovimentacao>().ReverseMap();
+
+            CreateMap<Usuario, UsuarioLogadoDto>()
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email.Endereco))
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.Nome));
         }
     }
 }

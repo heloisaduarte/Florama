@@ -7,11 +7,8 @@ namespace Florama.Data.Repositories
 {
     public class ProdutoFotoRepository : Repository<ProdutoFoto>, IProdutoFotoRepository
     {
-        private readonly FloramaDbContext _db;
-
         public ProdutoFotoRepository(FloramaDbContext db) : base(db)
         {
-            _db = db;
         }
     }
 }

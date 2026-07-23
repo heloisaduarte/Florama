@@ -20,7 +20,7 @@ namespace Florama.Data.Mappings
                     .HasColumnType("varchar(200)")
                     .HasColumnName(nameof(Usuario.Email).ToUpper())
                     .IsRequired();
-            }); 
+            });
 
             builder.OwnsOne(a => a.Telefone, telefone =>
             {
@@ -45,8 +45,33 @@ namespace Florama.Data.Mappings
 
             builder.Property(a => a.IsAdmin)
                 .IsRequired()
-                .HasColumnType("int")
+                .HasColumnType("bit")
                 .HasColumnName(nameof(Usuario.IsAdmin).ToUpper());
+
+            builder.Property(x => x.SenhaHash)
+                .HasColumnName(nameof(Usuario.SenhaHash).ToUpper())
+                .HasColumnType("varchar(255)")
+                .IsRequired();
+
+            builder.Property(x => x.Ativo)
+                .HasColumnName(nameof(Usuario.Ativo).ToUpper())
+                .HasColumnType("bit")
+                .IsRequired();
+
+            builder.Property(x => x.EmailConfirmado)
+                .HasColumnName(nameof(Usuario.EmailConfirmado).ToUpper())
+                .HasColumnType("bit")
+                .IsRequired();
+
+            builder.Property(x => x.RefreshToken)
+                .HasColumnName(nameof(Usuario.RefreshToken).ToUpper())
+                .HasColumnType("varchar(500)");
+
+            builder.Property(x => x.RefreshTokenExpiracao)
+                .HasColumnName(nameof(Usuario.RefreshTokenExpiracao).ToUpper());
+
+            builder.Property(x => x.UltimoLogin)
+                .HasColumnName(nameof(Usuario.UltimoLogin).ToUpper());
 
             builder.ToTable(nameof(Usuario).ToUpper());
 
