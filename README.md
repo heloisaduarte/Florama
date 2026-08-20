@@ -65,8 +65,8 @@ tests/
 
 A API está disponível publicamente para demonstração (hospedada no **Render**, com banco de dados no **Azure SQL**):
 
-* **Swagger:** `https://florama-api.onrender.com/swagger`
-* **Health check:** `https://florama-api.onrender.com/health`
+* **Swagger:** `https://florama.onrender.com/swagger`
+* **Health check:** `https://florama.onrender.com/health`
 
 > O plano gratuito do Render "dorme" após alguns minutos sem uso — o primeiro acesso pode demorar de 30 a 60 segundos. É normal, aguarde a resposta.
 
