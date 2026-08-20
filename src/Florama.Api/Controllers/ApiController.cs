@@ -35,7 +35,11 @@ namespace Florama.Api.Controllers
                 new Dictionary<string, string[]>
                 {
                     { "Mensagens", Erros.ToArray() }
-                }));
+                })
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Requisição inválida"
+            });
         }
 
         protected ActionResult CustomResponse(ModelStateDictionary modelState)

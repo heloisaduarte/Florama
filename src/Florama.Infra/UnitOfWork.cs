@@ -1,7 +1,7 @@
 ﻿using Florama.Domain.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Florama.Infrastructure.Data
+namespace Florama.Data
 {
     public class UnitOfWork : IUnitOfWork
     {

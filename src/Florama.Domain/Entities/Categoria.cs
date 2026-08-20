@@ -4,8 +4,8 @@ namespace Florama.Domain.Entities
 {
     public class Categoria : AuditEntity
     {
-        public string Nome { get; private set; }
-        public string Descricao { get; private set; }
+        public string Nome { get; private set; } = null!;
+        public string Descricao { get; private set; } = null!;
 
         public Categoria(string nome, string descricao)
         {

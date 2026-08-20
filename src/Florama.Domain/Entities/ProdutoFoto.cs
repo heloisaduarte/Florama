@@ -5,8 +5,8 @@ namespace Florama.Domain.Entities
     public class ProdutoFoto : AuditEntity
     {
         public long ProdutoId { get; private set; }
-        public Produto Produto { get; private set; }
-        public string Url { get; private set; }
+        public Produto Produto { get; private set; } = null!;
+        public string Url { get; private set; } = null!;
         public int Ordem { get; private set; }
 
         public ProdutoFoto()

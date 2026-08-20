@@ -27,6 +27,7 @@ namespace Florama.Api.Controllers
         }
 
         [HttpPost("criar")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Criar(CriarCategoriaRequest request)
         {
             var dto = _mapper.Map<CategoriaDto>(request);
@@ -37,6 +38,7 @@ namespace Florama.Api.Controllers
         }
 
         [HttpPut("atualizar")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Atualizar(AtualizarCategoriaRequest request)
         {
             var dto = _mapper.Map<CategoriaDto>(request);

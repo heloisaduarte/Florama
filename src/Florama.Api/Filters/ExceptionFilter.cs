@@ -1,6 +1,7 @@
 using Florama.Domain.DomainObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 
 namespace Florama.Api.Filters
 {
@@ -17,16 +18,49 @@ namespace Florama.Api.Filters
         {
             _logger.LogError(context.Exception, "Erro não tratado.");
 
-            var problemDetails = new ProblemDetails
+            if (context.Exception is DomainException domainException)
             {
-                Status = context.Exception is DomainException ? 400 : 500,
-                Title = "Erro interno",
-                Detail = context.Exception.Message
-            };
+                context.Result = new BadRequestObjectResult(
+                    new ValidationProblemDetails(
+                        new Dictionary<string, string[]>
+                        {
+                            { "Mensagens", new[] { domainException.Message } }
+                        })
+                    {
+                        Status = StatusCodes.Status400BadRequest,
+                        Title = "Requisição inválida"
+                    });
 
-            context.Result = new ObjectResult(problemDetails)
+                context.ExceptionHandled = true;
+                return;
+            }
+
+            if (context.Exception is DbUpdateConcurrencyException)
             {
-                StatusCode = problemDetails.Status
+                context.Result = new ObjectResult(
+                    new ProblemDetails
+                    {
+                        Status = StatusCodes.Status409Conflict,
+                        Title = "Conflito",
+                        Detail = "Os dados foram alterados por outro usuário. Recarregue e tente novamente."
+                    })
+                {
+                    StatusCode = StatusCodes.Status409Conflict
+                };
+
+                context.ExceptionHandled = true;
+                return;
+            }
+
+            context.Result = new ObjectResult(
+                new ProblemDetails
+                {
+                    Status = StatusCodes.Status500InternalServerError,
+                    Title = "Erro interno no servidor.",
+                    Detail = "Ocorreu um erro inesperado. Tente novamente mais tarde."
+                })
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
             };
 
             context.ExceptionHandled = true;

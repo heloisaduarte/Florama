@@ -4,9 +4,9 @@ namespace Florama.Api.ViewModel.Usuario
     {
         public long Id { get; set; }
 
-        public string Nome { get; set; }
+        public string Nome { get; set; } = null!;
 
-        public string Email { get; set; }
+        public string Email { get; set; } = null!;
 
         public bool IsAdmin { get; set; }
     }

@@ -1,6 +1,5 @@
-﻿using Florama.Domain.Interfaces.Repositories;
-using Florama.Infra.Repositories;
-using Florama.Infrastructure.Data;
+﻿using Florama.Data.Repositories;
+using Florama.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Florama.Data.Repositories
@@ -11,11 +10,10 @@ namespace Florama.Data.Repositories
         {
         }
 
-        public async Task<Estoque> ObterPorProdutoId(long id)
+        public async Task<Estoque?> ObterPorProdutoIdAsync(long id)
         {
             return await _db.Set<Estoque>()
-                .Where(c => c.ProdutoId == id)
-                .AsNoTracking().FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(c => c.ProdutoId == id);
         }
     }
 }

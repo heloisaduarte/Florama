@@ -1,4 +1,4 @@
-using Florama.Application.Interfaces;
+using Florama.Domain.Abstractions;
 using System.Security.Claims;
 
 namespace Florama.Api.Extensions

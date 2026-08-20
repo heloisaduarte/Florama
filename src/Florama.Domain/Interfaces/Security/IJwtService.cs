@@ -1,6 +1,6 @@
-﻿using Florama.Domain.Entities;
+using Florama.Domain.Entities;
 
-namespace Florama.Application.Interfaces.Security
+namespace Florama.Domain.Interfaces.Security
 {
     public interface IJwtService
     {

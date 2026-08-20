@@ -1,4 +1,4 @@
-﻿namespace Florama.Application.Options
+namespace Florama.Domain.Options
 {
     public class JwtOptions
     {

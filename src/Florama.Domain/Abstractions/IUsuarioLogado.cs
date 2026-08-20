@@ -1,4 +1,4 @@
-﻿namespace Florama.Application.Interfaces
+namespace Florama.Domain.Abstractions
 {
     public interface IUsuarioLogado
     {

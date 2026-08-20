@@ -4,12 +4,12 @@ namespace Florama.Domain.Entities
 {
     public class Produto : AuditEntity
     {
-        public string Nome { get; private set; }
+        public string Nome { get; private set; } = null!;
         public decimal Valor { get; private set; }
         public long CategoriaId { get; private set; }
-        public Categoria Categoria { get; private set; }
+        public Categoria Categoria { get; private set; } = null!;
         public ICollection<ProdutoFoto> Fotos { get; private set; } = new List<ProdutoFoto>();
-        public Estoque Estoque { get; private set; }
+        public Estoque Estoque { get; private set; } = null!;
         public Produto()
         {
         }

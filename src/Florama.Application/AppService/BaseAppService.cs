@@ -1,6 +1,5 @@
 ﻿using Florama.Domain.Abstractions;
 using Florama.Domain.Notifications;
-using FluentValidation;
 
 namespace Florama.Application.AppService
 {
@@ -34,27 +33,6 @@ namespace Florama.Application.AppService
         protected void NotificarErro(string mensagem)
         {
             _notifications.Handle(new DomainNotification("Error", mensagem));
-        }
-
-        protected void NotificarErro(Exception ex)
-        {
-            _notifications.Handle(new DomainNotification(ex.GetType().Name, ex.Message));
-        }
-
-        protected bool Validar<TEntity>(IValidator<TEntity> validator, TEntity entity)
-            where TEntity : class
-        {
-            var result = validator.Validate(entity);
-
-            if (result.IsValid)
-                return true;
-
-            foreach (var error in result.Errors)
-            {
-                NotificarErro(error.ErrorMessage);
-            }
-
-            return false;
         }
 
         public void Dispose()

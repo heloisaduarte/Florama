@@ -1,6 +1,6 @@
-﻿using Florama.Application.Interfaces.Security;
-using Florama.Application.Options;
-using Florama.Domain.Entities;
+﻿using Florama.Domain.Entities;
+using Florama.Domain.Interfaces.Security;
+using Florama.Domain.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,12 +22,12 @@ namespace Florama.Data.Services.Security
         public string GerarToken(Usuario usuario)
         {
             var claims = new List<Claim>
-        {
-            new(JwtRegisteredClaimNames.Sub, usuario.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, usuario.Email.Endereco),
-            new(ClaimTypes.Name, usuario.Nome),
-            new(ClaimTypes.Role, usuario.IsAdmin ? "Admin" : "Cliente")
-        };
+            {
+                new(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+                new(ClaimTypes.Email, usuario.Email.Endereco),
+                new(ClaimTypes.Name, usuario.Nome),
+                new(ClaimTypes.Role, usuario.IsAdmin ? "Admin" : "Cliente")
+            };
 
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));

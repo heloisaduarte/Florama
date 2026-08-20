@@ -1,12 +1,13 @@
 using AutoMapper;
 using Florama.Application.DTOs.Auth;
 using Florama.Application.Interfaces;
-using Florama.Application.Interfaces.Security;
-using Florama.Application.Options;
 using Florama.Domain.Abstractions;
+using Florama.Domain.DomainObjects;
 using Florama.Domain.Entities;
 using Florama.Domain.Interfaces.Repositories;
+using Florama.Domain.Interfaces.Security;
 using Florama.Domain.Notifications;
+using Florama.Domain.Options;
 using Microsoft.Extensions.Options;
 
 namespace Florama.Application.AppService
@@ -18,6 +19,7 @@ namespace Florama.Application.AppService
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtService _jwtService;
         private readonly JwtOptions _jwtOptions;
+        private readonly LoginOptions _loginOptions;
 
         public AuthAppService(
             IUsuarioRepository usuarioRepository,
@@ -26,21 +28,37 @@ namespace Florama.Application.AppService
             IMapper mapper,
             IPasswordHasher passwordHasher,
             IJwtService jwtService,
-            IOptions<JwtOptions> jwtOptions) : base(uow, notifications)
+            IOptions<JwtOptions> jwtOptions,
+            IOptions<LoginOptions> loginOptions) : base(uow, notifications)
         {
             _usuarioRepository = usuarioRepository;
             _mapper = mapper;
             _passwordHasher = passwordHasher;
             _jwtService = jwtService;
             _jwtOptions = jwtOptions.Value;
+            _loginOptions = loginOptions.Value;
         }
 
-        public async Task<LoginDto> LoginAsync(LoginRequestDto request)
+        public async Task<LoginDto?> LoginAsync(LoginRequestDto request)
         {
             var usuario = await _usuarioRepository.ObterPorEmailAsync(request.Email);
 
-            if (usuario is null || !_passwordHasher.Verify(request.Senha, usuario.SenhaHash))
+            if (usuario is null)
             {
+                NotificarErro("Credenciais inválidas.");
+                return null;
+            }
+
+            if (usuario.EstaBloqueado())
+            {
+                NotificarErro("Conta bloqueada temporariamente. Tente novamente mais tarde.");
+                return null;
+            }
+
+            if (!_passwordHasher.Verify(request.Senha, usuario.SenhaHash))
+            {
+                usuario.RegistrarFalhaLogin(_loginOptions.MaximoTentativas, TimeSpan.FromMinutes(_loginOptions.BloqueioMinutos));
+                await CommitAsync();
                 NotificarErro("Credenciais inválidas.");
                 return null;
             }
@@ -51,6 +69,7 @@ namespace Florama.Application.AppService
                 return null;
             }
 
+            usuario.ResetarFalhasLogin();
             usuario.RegistrarLogin();
             var accessToken = _jwtService.GerarToken(usuario);
             var refreshToken = _jwtService.GerarRefreshToken();
@@ -69,7 +88,7 @@ namespace Florama.Application.AppService
             };
         }
 
-        public async Task<LoginDto> RefreshTokenAsync(RefreshTokenRequestDto request)
+        public async Task<LoginDto?> RefreshTokenAsync(RefreshTokenRequestDto request)
         {
             var usuario = await _usuarioRepository.ObterPorRefreshTokenAsync(request.RefreshToken);
 
@@ -82,6 +101,12 @@ namespace Florama.Application.AppService
             if (usuario.RefreshTokenExpiracao <= DateTime.UtcNow)
             {
                 NotificarErro("Refresh token expirado.");
+                return null;
+            }
+
+            if (!usuario.Ativo)
+            {
+                NotificarErro("Usuário inativo.");
                 return null;
             }
 
@@ -104,7 +129,7 @@ namespace Florama.Application.AppService
 
         public async Task LogoutAsync(long usuarioId)
         {
-            var usuario = await _usuarioRepository.GetByIdAsync(usuarioId);
+            var usuario = await _usuarioRepository.ObterPorIdAsync(usuarioId);
 
             if (usuario is not null)
             {
@@ -113,14 +138,14 @@ namespace Florama.Application.AppService
             }
         }
 
-        public async Task<UsuarioLogadoDto> ObterUsuarioLogadoAsync(long usuarioId)
+        public async Task<UsuarioLogadoDto?> ObterUsuarioLogadoAsync(long usuarioId)
         {
-            var usuario = await _usuarioRepository.GetByIdAsync(usuarioId);
+            var usuario = await _usuarioRepository.ObterPorIdAsync(usuarioId);
 
             return _mapper.Map<UsuarioLogadoDto>(usuario);
         }
 
-        public async Task<UsuarioLogadoDto> RegistrarUsuarioAsync(CriarUsuarioDto dto)
+        public async Task<UsuarioLogadoDto?> RegistrarUsuarioAsync(CriarUsuarioDto dto)
         {
             var usuarioExistente = await _usuarioRepository.ObterPorEmailAsync(dto.Email);
 
@@ -130,25 +155,30 @@ namespace Florama.Application.AppService
                 return null;
             }
 
-            var senhaHash = _passwordHasher.Hash(dto.Senha);
+            try
+            {
+                var senhaHash = _passwordHasher.Hash(dto.Senha);
 
-            var usuario = new Usuario(
-                dto.Nome,
-                dto.Email,
-                dto.Cpf,
-                dto.DataNascimento,
-                dto.Telefone,
-                isAdmin: false,
-                senhaHash);
+                var usuario = new Usuario(
+                    dto.Nome,
+                    dto.Email,
+                    dto.Cpf,
+                    dto.DataNascimento,
+                    dto.Telefone,
+                    isAdmin: false,
+                    senhaHash);
 
-            await _usuarioRepository.Add(usuario);
+                await _usuarioRepository.Adicionar(usuario);
 
-            await CommitAsync();
+                await CommitAsync();
 
-            if (PossuiNotificacoes())
+                return _mapper.Map<UsuarioLogadoDto>(usuario);
+            }
+            catch (DomainException ex)
+            {
+                NotificarErro(ex.Message);
                 return null;
-
-            return _mapper.Map<UsuarioLogadoDto>(usuario);
+            }
         }
     }
 }

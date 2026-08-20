@@ -8,13 +8,15 @@ O objetivo do projeto é demonstrar a construção de uma API utilizando **DDD (
 
 ## Tecnologias utilizadas
 
-* .NET
+* .NET 8
 * ASP.NET Core Web API
 * Entity Framework Core
 * SQL Server
 * Swagger / OpenAPI
+* JWT (autenticação) + Rate Limiting
 * DDD (Domain Driven Design)
 * Clean Architecture
+* xUnit (testes unitários)
 
 ---
 
@@ -24,21 +26,55 @@ O projeto está organizado seguindo princípios de **DDD e separação de respon
 
 src/
 
-* **Florama.Api** → Camada de apresentação (Controllers, configuração da API)
+* **Florama.Api** → Camada de apresentação (Controllers, Filters, validações, configuração da API)
 * **Florama.Application** → Casos de uso, serviços e DTOs
-* **Florama.Domain** → Entidades e regras de negócio (Domínio)
-* **Florama.Infrastructure** → Acesso a dados, Entity Framework, repositórios
+* **Florama.Domain** → Entidades, regras de negócio, interfaces de segurança e opções (Domínio)
+* **Florama.CrossCutting** → Serviços de infraestrutura compartilhados (JWT, password hasher)
+* **Florama.Data** → Acesso a dados, Entity Framework, repositórios, migrações, seed de dados
+
+tests/
+
+* **Florama.Tests** → Testes unitários de domínio (entities, value objects)
 
 ---
 
-## Funcionalidades planejadas
+## Como executar
+
+1. **Configurar o banco de dados** no `appsettings.Development.json` (`ConnectionStrings:DefaultConnection`).
+2. **Configurar os segredos** em `appsettings.Development.json` (arquivo gitignored) ou via variáveis de ambiente:
+   * `Jwt:SecretKey` → chave com pelo menos 32 bytes (obrigatória).
+   * `Admin:Email` e `Admin:Senha` → credenciais do usuário administrador inicial.
+3. **Aplicar as migrações:**
+
+   ```bash
+   dotnet ef database update --project src\Florama.Infra --startup-project src\Florama.Api
+   ```
+
+4. **Executar a API:**
+
+   ```bash
+   dotnet run --project src\Florama.Api
+   ```
+
+   Ao iniciar, o `DataSeeder` cria o usuário administrador definido em `Admin:Email`/`Admin:Senha`.
+
+5. **Executar os testes:**
+
+   ```bash
+   dotnet test tests\Florama.Tests
+   ```
+
+---
+
+## Funcionalidades
 
 * Cadastro de categorias
-* Cadastro de produtos
+* Cadastro de produtos com fotos (ordenação) e estoque
 * Listagem de produtos
-* Carrinho de compras
-* Criação de pedidos
+* Autenticação JWT com refresh token e bloqueio por tentativas
 * Gerenciamento de usuários
+* Controle de concorrência no estoque (RowVersion)
+* Health check em `/health`
 
 ---
 
@@ -49,12 +85,6 @@ A loja Florama trabalha com produtos voltados para **bem-estar e aromatização 
 * Velas aromáticas
 * Sabonetes artesanais
 * Aromatizadores de ambiente
-
----
-
-## Objetivo do projeto
-
-Desenvolver uma API de e-commerce completa utilizando .NET, com foco em arquitetura bem estruturada e organização de código, como parte de um projeto de portfólio.
 
 ---
 

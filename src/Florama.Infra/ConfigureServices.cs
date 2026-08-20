@@ -1,12 +1,11 @@
-﻿using Florama.Application.Interfaces.Security;
-using Florama.Data.Services.Security;
+﻿using Florama.Data.Services.Security;
 using Florama.Domain.Abstractions;
-using Florama.Infrastructure.Data;
+using Florama.Domain.Interfaces.Security;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-namespace Florama.Infra.Data
+namespace Florama.Data
 {
     [ExcludeFromCodeCoverage]
     public static class ConfigureServices

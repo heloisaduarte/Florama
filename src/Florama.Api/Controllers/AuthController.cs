@@ -7,6 +7,7 @@ using Florama.Domain.Abstractions;
 using Florama.Domain.Notifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Florama.Api.Controllers
 {
@@ -30,6 +31,7 @@ namespace Florama.Api.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
+        [EnableRateLimiting("auth")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
             var dto = _mapper.Map<LoginRequestDto>(request);
@@ -40,6 +42,7 @@ namespace Florama.Api.Controllers
 
         [HttpPost("refresh-token")]
         [AllowAnonymous]
+        [EnableRateLimiting("auth")]
         public async Task<IActionResult> RefreshToken(RefreshTokenRequest request)
         {
             var dto = _mapper.Map<RefreshTokenRequestDto>(request);

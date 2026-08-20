@@ -6,44 +6,41 @@ using Florama.Domain.DomainObjects;
 using Florama.Domain.Entities;
 using Florama.Domain.Interfaces.Repositories;
 using Florama.Domain.Notifications;
-using FluentValidation;
 
 namespace Florama.Application.AppService
 {
     public class ProdutoAppService : BaseAppService, IProdutoAppService
     {
         private readonly IMapper _mapper;
-        private readonly IValidator<Produto> _produtoValidator;
         private readonly IProdutoRepository _produtoRepository;
         private readonly ICategoriaRepository _categoriaRepository;
         private readonly IEstoqueRepository _estoqueRepository;
+
         public ProdutoAppService(
             IUnitOfWork uow,
             IHandler<DomainNotification> notifications,
             IMapper mapper,
             IProdutoRepository produtoRepository,
             ICategoriaRepository categoriaRepository,
-            IValidator<Produto> produtoValidator,
             IEstoqueRepository estoqueRepository) : base(uow, notifications)
         {
             _mapper = mapper;
             _produtoRepository = produtoRepository;
             _categoriaRepository = categoriaRepository;
-            _produtoValidator = produtoValidator;
             _estoqueRepository = estoqueRepository;
         }
 
-        public async Task<ProdutoDto> Atualizar(ProdutoDto dto)
+        public async Task<ProdutoDto?> Atualizar(ProdutoDto dto)
         {
-            var produto = await _produtoRepository.ObterPorId(dto.Id);
+            var produto = await _produtoRepository.ObterPorIdAsync(dto.Id);
 
-            if(produto is null)
+            if (produto is null)
             {
                 NotificarErro("Produto não encontrado.");
                 return null;
             }
 
-            var categoria = await _categoriaRepository.GetByIdAsync(dto.CategoriaId);
+            var categoria = await _categoriaRepository.ObterPorIdAsync(dto.CategoriaId);
 
             if (categoria is null)
             {
@@ -51,14 +48,32 @@ namespace Florama.Application.AppService
                 return null;
             }
 
-            produto.DefinirValor(dto.Valor);
-            produto.DefinirNome(dto.Nome);
-            produto.DefinirCategoria(categoria);
+            try
+            {
+                produto.DefinirValor(dto.Valor);
+                produto.DefinirNome(dto.Nome);
+                produto.DefinirCategoria(categoria);
 
-            if (!Validar(_produtoValidator, produto))
+                if (dto.Fotos is { Count: > 0 })
+                {
+                    foreach (var id in produto.Fotos.Select(f => f.Id).ToList())
+                    {
+                        produto.RemoverFoto(id);
+                    }
+
+                    foreach (var foto in dto.Fotos)
+                    {
+                        produto.AdicionarFoto(foto.Url);
+                    }
+                }
+            }
+            catch (DomainException ex)
+            {
+                NotificarErro(ex.Message);
                 return null;
+            }
 
-            await _produtoRepository.Update(produto);
+            await _produtoRepository.Atualizar(produto);
 
             await CommitAsync();
 
@@ -67,24 +82,32 @@ namespace Florama.Application.AppService
 
         public async Task AdicionarFoto(long produtoId, string url)
         {
-            var produto = await _produtoRepository.ObterPorId(produtoId);
+            var produto = await _produtoRepository.ObterPorIdAsync(produtoId);
 
-            if (produto is null) 
+            if (produto is null)
             {
                 NotificarErro("Produto não encontrado.");
                 return;
             }
 
-            produto.AdicionarFoto(url);
+            try
+            {
+                produto.AdicionarFoto(url);
+            }
+            catch (DomainException ex)
+            {
+                NotificarErro(ex.Message);
+                return;
+            }
 
-            await _produtoRepository.Update(produto);
+            await _produtoRepository.Atualizar(produto);
 
             await CommitAsync();
         }
 
         public async Task RemoverFoto(long produtoId, long fotoId)
         {
-            var produto = await _produtoRepository.ObterPorId(produtoId);
+            var produto = await _produtoRepository.ObterPorIdAsync(produtoId);
 
             if (produto is null)
             {
@@ -102,14 +125,14 @@ namespace Florama.Application.AppService
                 return;
             }
 
-            await _produtoRepository.Update(produto);
+            await _produtoRepository.Atualizar(produto);
 
             await CommitAsync();
         }
 
         public async Task ReordenarFotos(long produtoId, Dictionary<long, int> novasOrdens)
         {
-            var produto = await _produtoRepository.ObterPorId(produtoId);
+            var produto = await _produtoRepository.ObterPorIdAsync(produtoId);
 
             if (produto is null)
             {
@@ -127,14 +150,14 @@ namespace Florama.Application.AppService
                 return;
             }
 
-            await _produtoRepository.Update(produto);
+            await _produtoRepository.Atualizar(produto);
 
             await CommitAsync();
         }
-        
-        public async Task<ProdutoDto> Criar(ProdutoDto dto)
+
+        public async Task<ProdutoDto?> Criar(ProdutoDto dto)
         {
-            var categoria = await _categoriaRepository.GetByIdAsync(dto.CategoriaId);
+            var categoria = await _categoriaRepository.ObterPorIdAsync(dto.CategoriaId);
 
             if (categoria is null)
             {
@@ -144,46 +167,52 @@ namespace Florama.Application.AppService
 
             var produto = new Produto();
 
-            produto.DefinirValor(dto.Valor);
-            produto.DefinirNome(dto.Nome);
-            produto.DefinirCategoria(categoria);
+            try
+            {
+                produto.DefinirValor(dto.Valor);
+                produto.DefinirNome(dto.Nome);
+                produto.DefinirCategoria(categoria);
+
+                foreach (var foto in dto.Fotos)
+                {
+                    produto.AdicionarFoto(foto.Url);
+                }
+            }
+            catch (DomainException ex)
+            {
+                NotificarErro(ex.Message);
+                return null;
+            }
 
             var estoque = new Estoque();
             estoque.DefinirProduto(produto);
             estoque.Adicionar(dto.Estoque.Quantidade);
 
-            foreach (var foto in dto.Fotos)
-            {
-                produto.AdicionarFoto(foto.Url );
-            }
-
-            if (!Validar(_produtoValidator, produto))
-                return null;
-
-            await _produtoRepository.Add(produto);
-            await _estoqueRepository.Add(estoque);
+            await _produtoRepository.Adicionar(produto);
+            await _estoqueRepository.Adicionar(estoque);
 
             await CommitAsync();
 
             return _mapper.Map<ProdutoDto>(produto);
         }
-        public async Task<ProdutoDto> ObterPorId(long id)
+
+        public async Task<ProdutoDto?> ObterPorId(long id)
         {
-            var produto = await _produtoRepository.ObterPorId(id);
+            var produto = await _produtoRepository.ObterPorIdAsync(id);
 
             return _mapper.Map<ProdutoDto>(produto);
         }
 
         public async Task<IEnumerable<ProdutoDto>> ObterTodos()
         {
-            var produtos = await _produtoRepository.ObterTodos();
+            var produtos = await _produtoRepository.ObterTodosAsync();
 
             return _mapper.Map<IEnumerable<ProdutoDto>>(produtos);
         }
 
         public async Task<IEnumerable<ProdutoDto>> ObterEmEstoque()
         {
-            var produtos = await _produtoRepository.ObterEmEstoque();
+            var produtos = await _produtoRepository.ObterEmEstoqueAsync();
 
             return _mapper.Map<IEnumerable<ProdutoDto>>(produtos);
         }

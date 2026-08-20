@@ -3,11 +3,11 @@ using Florama.Domain.DomainObjects;
 
 namespace Florama.Domain.ValueObjects
 {
-    public class Cpf
+    public class Cpf : IEquatable<Cpf>
     {
         public const int CpfMaxLength = 11;
 
-        public string CpfLimpo { get; private set; }
+        public string CpfLimpo { get; private set; } = null!;
 
         protected Cpf()
         {
@@ -26,6 +26,41 @@ namespace Florama.Domain.ValueObjects
         public string ObterCpfFormatado()
         {
             return long.Parse(CpfLimpo).ToString("000\\.000\\.000\\-00");
+        }
+
+        public bool Equals(Cpf? other)
+        {
+            if (other is null) return false;
+
+            return CpfLimpo == other.CpfLimpo;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Cpf cpf && Equals(cpf);
+        }
+
+        public override int GetHashCode()
+        {
+            return CpfLimpo?.GetHashCode() ?? 0;
+        }
+
+        public override string ToString()
+        {
+            return ObterCpfFormatado();
+        }
+
+        public static bool operator ==(Cpf? a, Cpf? b)
+        {
+            if (a is null && b is null) return true;
+            if (a is null || b is null) return false;
+
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Cpf? a, Cpf? b)
+        {
+            return !(a == b);
         }
 
         public static bool Validar(string cpf)
@@ -102,5 +137,4 @@ namespace Florama.Domain.ValueObjects
             return true;
         }
     }
-
 }

@@ -1,4 +1,4 @@
-﻿namespace Florama.Application.Interfaces.Security
+namespace Florama.Domain.Interfaces.Security
 {
     public interface IPasswordHasher
     {

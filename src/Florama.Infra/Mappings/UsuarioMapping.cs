@@ -73,6 +73,15 @@ namespace Florama.Data.Mappings
             builder.Property(x => x.UltimoLogin)
                 .HasColumnName(nameof(Usuario.UltimoLogin).ToUpper());
 
+            builder.Property(x => x.TentativasLoginFalhas)
+                .HasColumnName(nameof(Usuario.TentativasLoginFalhas).ToUpper())
+                .HasColumnType("INT")
+                .IsRequired()
+                .HasDefaultValue(0);
+
+            builder.Property(x => x.BloqueioAte)
+                .HasColumnName(nameof(Usuario.BloqueioAte).ToUpper());
+
             builder.ToTable(nameof(Usuario).ToUpper());
 
             base.Configure(builder);

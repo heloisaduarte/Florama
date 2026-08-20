@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Florama.Api.Controllers
 {
     [Route("api/[controller]")]
-
     public class EstoqueController : ApiController
     {
         private readonly IMapper _mapper;
@@ -27,6 +26,7 @@ namespace Florama.Api.Controllers
         }
 
         [HttpPost("movimentar")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Movimentar(MovimentarEstoqueRequest request)
         {
             var dto = _mapper.Map<EstoqueMovimentacaoDto>(request);

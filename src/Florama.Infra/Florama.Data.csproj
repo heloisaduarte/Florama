@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Florama.Application\Florama.Application.csproj" />
     <ProjectReference Include="..\Florama.Domain\Florama.Domain.csproj" />
   </ItemGroup>
 

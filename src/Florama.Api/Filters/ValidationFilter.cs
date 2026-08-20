@@ -19,7 +19,6 @@ namespace Florama.Api.Filters
             {
                 if (argument.Value == null) continue;
 
-                // Procura um validator registrado para o tipo do argumento
                 var validatorType = typeof(IValidator<>).MakeGenericType(argument.Value.GetType());
                 var validator = _serviceProvider.GetService(validatorType) as IValidator;
 
@@ -28,10 +27,22 @@ namespace Florama.Api.Filters
                     var validationResult = await validator.ValidateAsync(new ValidationContext<object>(argument.Value));
                     if (!validationResult.IsValid)
                     {
+                        var erros = validationResult.Errors
+                            .Select(e => e.ErrorMessage)
+                            .Distinct()
+                            .ToArray();
+
                         context.Result = new BadRequestObjectResult(
-                            validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage })
-                        );
-                        return; // para a execução do controller
+                            new ValidationProblemDetails(
+                                new Dictionary<string, string[]>
+                                {
+                                    { "Mensagens", erros }
+                                })
+                            {
+                                Status = StatusCodes.Status400BadRequest,
+                                Title = "Requisição inválida"
+                            });
+                        return;
                     }
                 }
             }

@@ -1,4 +1,4 @@
-﻿using Florama.Infrastructure.Data;
+﻿using Florama.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Florama.Api.Extensions

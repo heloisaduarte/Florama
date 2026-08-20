@@ -3,9 +3,11 @@ using Florama.Api.Extensions;
 using Florama.Api.Filters;
 using Florama.Application;
 using Florama.Application.AutoMapper;
-using Florama.Application.Options;
-using Florama.Infra.Data;
+using Florama.Data;
+using Florama.Domain.Options;
 using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,11 +32,15 @@ builder.Services
     .AddRepositories();
 
 builder.Services.AddAutoMapper(
+    _ => { },
     typeof(PresentationMappingProfile).Assembly,
     typeof(ApplicationMappingProfile).Assembly);
 
 builder.Services.Configure<JwtOptions>(
     builder.Configuration.GetSection("Jwt"));
+
+builder.Services.Configure<LoginOptions>(
+    builder.Configuration.GetSection("Login"));
 
 builder.Services.AddAuthenticationSetup(builder.Configuration);
 
@@ -45,15 +51,50 @@ builder.Services.AddAuthorization(options =>
         .Build();
 });
 
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        if (allowedOrigins is { Length: > 0 })
+        {
+            policy.WithOrigins(allowedOrigins)
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        }
+        else
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        }
     });
 });
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.AddPolicy("auth", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+});
+
+builder.Services.AddHealthChecks();
+
+// Mantém os claims escritos no token sem re-mapeamento automático,
+// garantindo consistência entre emissão (JwtService) e leitura (IUsuarioLogado).
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+
+AuthenticationSetup.ValidarConfiguracaoJwt(builder.Configuration, builder.Environment.IsDevelopment());
 
 var app = builder.Build();
 
@@ -64,14 +105,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowAll");
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHealthChecks("/health");
+
+await DataSeeder.SeedAdminAsync(app.Services, app.Configuration);
 
 app.Run();

@@ -1,4 +1,4 @@
-﻿using Florama.Application.Interfaces.Security;
+﻿using Florama.Domain.Interfaces.Security;
 
 namespace Florama.Data.Services.Security
 {

@@ -14,7 +14,7 @@ public class CriarCategoriaRequestValidation : AbstractValidator<CriarCategoriaR
         RuleFor(x => x.Descricao)
             .Must(descricao => !string.IsNullOrWhiteSpace(descricao))
             .WithMessage("Descrição da categoria é obrigatória.")
-            .Length(3, 200)
-            .WithMessage("Descrição deve ter entre 3 e 200 caracteres.");
+            .Length(3, 500)
+            .WithMessage("Descrição deve ter entre 3 e 500 caracteres.");
     }
 }

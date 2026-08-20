@@ -1,7 +1,6 @@
+using Florama.Data.Repositories;
 using Florama.Domain.Entities;
 using Florama.Domain.Interfaces.Repositories;
-using Florama.Infra.Repositories;
-using Florama.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Florama.Data.Repositories
@@ -15,7 +14,6 @@ namespace Florama.Data.Repositories
         public async Task<Usuario?> ObterPorEmailAsync(string email)
         {
             return await _db.Set<Usuario>()
-                .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email.Endereco == email);
         }
 

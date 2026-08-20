@@ -5,6 +5,6 @@ namespace Florama.Domain.Interfaces.Repositories
 {
     public interface IEstoqueRepository : IAsyncRepository<Estoque>
     {
-        public Task<Estoque> ObterPorProdutoId(long id);
+        Task<Estoque?> ObterPorProdutoIdAsync(long id);
     }
 }

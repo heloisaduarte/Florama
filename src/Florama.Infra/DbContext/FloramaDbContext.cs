@@ -1,8 +1,8 @@
-﻿using Florama.Application.Interfaces;
+﻿using Florama.Domain.Abstractions;
 using Florama.Domain.DomainObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace Florama.Infrastructure.Data
+namespace Florama.Data
 {
     public class FloramaDbContext : DbContext
     {

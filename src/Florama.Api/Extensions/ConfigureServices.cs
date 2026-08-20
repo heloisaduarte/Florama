@@ -1,4 +1,4 @@
-﻿using Florama.Application.Interfaces;
+﻿using Florama.Domain.Abstractions;
 using FluentValidation;
 using System.Reflection;
 

@@ -6,15 +6,15 @@ namespace Florama.Domain.Entities
 {
     public class Usuario : AuditEntity
     {
-        public string Nome { get; private set; }
-        public Email Email { get; private set; }
-        public Cpf Cpf { get; private set; }
+        public string Nome { get; private set; } = null!;
+        public Email Email { get; private set; } = null!;
+        public Cpf Cpf { get; private set; } = null!;
         public DateOnly DataNascimento { get; private set; }
-        public Telefone Telefone { get; private set; }
+        public Telefone Telefone { get; private set; } = null!;
 
         public bool IsAdmin { get; private set; }
 
-        public string SenhaHash { get; private set; }
+        public string SenhaHash { get; private set; } = null!;
 
         public bool Ativo { get; private set; }
 
@@ -25,6 +25,10 @@ namespace Florama.Domain.Entities
         public DateTime? RefreshTokenExpiracao { get; private set; }
 
         public DateTime? UltimoLogin { get; private set; }
+
+        public int TentativasLoginFalhas { get; private set; }
+
+        public DateTime? BloqueioAte { get; private set; }
 
         protected Usuario() { }
 
@@ -73,6 +77,33 @@ namespace Florama.Domain.Entities
         public void RegistrarLogin()
         {
             UltimoLogin = DateTime.UtcNow;
+        }
+
+        public bool EstaBloqueado()
+        {
+            return BloqueioAte.HasValue && BloqueioAte.Value > DateTime.UtcNow;
+        }
+
+        public void RegistrarFalhaLogin(int maximoTentativas, TimeSpan duracaoBloqueio)
+        {
+            TentativasLoginFalhas++;
+
+            if (TentativasLoginFalhas >= maximoTentativas)
+            {
+                BloqueioAte = DateTime.UtcNow.Add(duracaoBloqueio);
+                TentativasLoginFalhas = 0;
+            }
+        }
+
+        public void ResetarFalhasLogin()
+        {
+            TentativasLoginFalhas = 0;
+            BloqueioAte = null;
+        }
+
+        public void ConfirmarEmail()
+        {
+            EmailConfirmado = true;
         }
 
         public void Ativar()

@@ -8,7 +8,7 @@ public class AdicionarFotoRequestValidation : AbstractValidator<AdicionarFotoReq
         RuleFor(x => x.Url)
             .Must(url => !string.IsNullOrWhiteSpace(url))
             .WithMessage("Url da foto é obrigatória.")
-            .MaximumLength(1000)
+            .MaximumLength(500)
             .WithMessage("Url muito longa.");
     }
 }

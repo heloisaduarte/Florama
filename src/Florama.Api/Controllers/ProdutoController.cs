@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Florama.Api.Controllers
 {
-
     [Route("api/[controller]")]
     public class ProdutoController : ApiController
     {
@@ -19,7 +18,7 @@ namespace Florama.Api.Controllers
 
         public ProdutoController(
             IHandler<DomainNotification> notifications,
-            IMapper mapper, 
+            IMapper mapper,
             IProdutoAppService appService) : base(notifications)
         {
             _mapper = mapper;
@@ -27,6 +26,7 @@ namespace Florama.Api.Controllers
         }
 
         [HttpPost("criar")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Criar(CriarProdutoRequest request)
         {
             var dto = _mapper.Map<ProdutoDto>(request);
@@ -36,7 +36,8 @@ namespace Florama.Api.Controllers
             return CustomResponse(_mapper.Map<ProdutoViewModel>(result));
         }
 
-        [HttpPost("adicionar-fotos/{produtoId}")]
+        [HttpPost("adicionar-foto/{produtoId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdicionarFoto(long produtoId, AdicionarFotoRequest request)
         {
             await _appService.AdicionarFoto(produtoId, request.Url);
@@ -44,7 +45,8 @@ namespace Florama.Api.Controllers
             return CustomResponse();
         }
 
-        [HttpPut("ordernar-fotos/{produtoId}")]
+        [HttpPut("ordenar-fotos/{produtoId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Reordenar(long produtoId, ReordenarFotosRequest request)
         {
             var dict = request.Fotos.ToDictionary(x => x.Id, x => x.Ordem);
@@ -55,6 +57,7 @@ namespace Florama.Api.Controllers
         }
 
         [HttpPut("atualizar")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Atualizar(AtualizarProdutoRequest request)
         {
             var dto = _mapper.Map<ProdutoDto>(request);
@@ -64,15 +67,17 @@ namespace Florama.Api.Controllers
             return CustomResponse(_mapper.Map<ProdutoViewModel>(result));
         }
 
-        [HttpDelete("remover-fotos/{fotoId}")]
-        public async Task<IActionResult> RemoverFoto(long id, long fotoId)
+        [HttpDelete("remover-foto/{produtoId}/{fotoId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RemoverFoto(long produtoId, long fotoId)
         {
-            await _appService.RemoverFoto(id, fotoId);
+            await _appService.RemoverFoto(produtoId, fotoId);
 
             return CustomResponse();
         }
 
         [HttpGet("obter-todos")]
+        [AllowAnonymous]
         public async Task<IActionResult> ObterTodos()
         {
             var result = await _appService.ObterTodos();

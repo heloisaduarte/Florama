@@ -13,6 +13,10 @@ namespace Florama.Data.Mappings
             .IsRequired()
             .HasColumnName(nameof(Estoque.Quantidade).ToUpper());
 
+            builder.Property(u => u.RowVersion)
+                .IsRowVersion()
+                .HasColumnName("ROWVERSION");
+
             builder.Property(x => x.ProdutoId)
                .HasColumnName(nameof(Estoque.ProdutoId).ToUpper())
                .IsRequired();

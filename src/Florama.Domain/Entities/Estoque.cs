@@ -4,8 +4,9 @@ using Florama.Domain.Entities;
 public class Estoque : AuditEntity
 {
     public long ProdutoId { get; private set; }
-    public Produto Produto { get; private set; }
+    public Produto Produto { get; private set; } = null!;
     public int Quantidade { get; private set; }
+    public byte[]? RowVersion { get; set; }
 
     public Estoque() { }
 

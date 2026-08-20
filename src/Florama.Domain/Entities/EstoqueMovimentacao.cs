@@ -5,7 +5,7 @@ using Florama.Domain.Enums;
 public class EstoqueMovimentacao : AuditEntity
 {
     public long ProdutoId { get; private set; }
-    public Produto Produto { get; private set; }
+    public Produto Produto { get; private set; } = null!;
     public TipoMovimentacao Tipo { get; private set; }
     public int Quantidade { get; private set; }
 
