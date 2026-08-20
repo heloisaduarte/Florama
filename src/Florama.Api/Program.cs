@@ -119,6 +119,6 @@ app.MapControllers();
 
 app.MapHealthChecks("/health");
 
-await DataSeeder.SeedAdminAsync(app.Services, app.Configuration);
+await DataSeeder.InitializeDatabaseAsync(app.Services, app.Configuration);
 
 app.Run();

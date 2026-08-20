@@ -44,25 +44,30 @@ tests/
 2. **Configurar os segredos** em `appsettings.Development.json` (arquivo gitignored) ou via variáveis de ambiente:
    * `Jwt:SecretKey` → chave com pelo menos 32 bytes (obrigatória).
    * `Admin:Email` e `Admin:Senha` → credenciais do usuário administrador inicial.
-3. **Aplicar as migrações:**
-
-   ```bash
-   dotnet ef database update --project src\Florama.Infra --startup-project src\Florama.Api
-   ```
-
-4. **Executar a API:**
+3. **Executar a API:**
 
    ```bash
    dotnet run --project src\Florama.Api
    ```
 
-   Ao iniciar, o `DataSeeder` cria o usuário administrador definido em `Admin:Email`/`Admin:Senha`.
+   Ao iniciar, a aplicação aplica as migrações pendentes, cria o usuário administrador (`Admin:Email`/`Admin:Senha`) e, se a tabela de categorias estiver vazia, insere **dados de demonstração** (categorias, produtos, fotos e estoque). Para desativar o seed de demonstração, defina `SeedDemoData` como `false` nas configurações.
 
-5. **Executar os testes:**
+4. **Executar os testes:**
 
    ```bash
    dotnet test tests\Florama.Tests
    ```
+
+---
+
+## Demo online
+
+A API está disponível publicamente para demonstração:
+
+* **Swagger:** `https://florama-api.azurewebsites.net/swagger`
+* **Health check:** `https://florama-api.azurewebsites.net/health`
+
+> O plano gratuito do Azure "dorme" após alguns minutos sem uso — o primeiro acesso pode demorar de 30 a 60 segundos. É normal, aguarde a resposta.
 
 ---
 
