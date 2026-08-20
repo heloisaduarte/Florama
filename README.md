@@ -17,6 +17,7 @@ O objetivo do projeto é demonstrar a construção de uma API utilizando **DDD (
 * DDD (Domain Driven Design)
 * Clean Architecture
 * xUnit (testes unitários)
+* Docker
 
 ---
 
@@ -62,12 +63,12 @@ tests/
 
 ## Demo online
 
-A API está disponível publicamente para demonstração:
+A API está disponível publicamente para demonstração (hospedada no **Render**, com banco de dados no **Azure SQL**):
 
-* **Swagger:** `https://florama-api.azurewebsites.net/swagger`
-* **Health check:** `https://florama-api.azurewebsites.net/health`
+* **Swagger:** `https://florama-api.onrender.com/swagger`
+* **Health check:** `https://florama-api.onrender.com/health`
 
-> O plano gratuito do Azure "dorme" após alguns minutos sem uso — o primeiro acesso pode demorar de 30 a 60 segundos. É normal, aguarde a resposta.
+> O plano gratuito do Render "dorme" após alguns minutos sem uso — o primeiro acesso pode demorar de 30 a 60 segundos. É normal, aguarde a resposta.
 
 ---
 
