@@ -6,6 +6,7 @@ using Florama.Application.AutoMapper;
 using Florama.Data;
 using Florama.Domain.Options;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.RateLimiting;
 
@@ -87,6 +88,15 @@ builder.Services.AddRateLimiter(options =>
             }));
 });
 
+// Confia nos cabeçalhos encaminhados pelo proxy do Azure para obter o IP real do cliente
+// (necessário para o rate limiting e para a segurança em ambientes atrás de proxy).
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 builder.Services.AddHealthChecks();
 
 // Mantém os claims escritos no token sem re-mapeamento automático,
@@ -99,6 +109,8 @@ AuthenticationSetup.ValidarConfiguracaoJwt(builder.Configuration, builder.Enviro
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseForwardedHeaders();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
