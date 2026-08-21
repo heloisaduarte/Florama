@@ -10,6 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Florama.Api.Controllers
 {
+    /// <summary>
+    /// Cadastro de usuários.
+    /// </summary>
+    /// <remarks>Endpoint público — não requer autenticação.</remarks>
     [Route("api/[controller]")]
     public class UsuarioController : ApiController
     {
@@ -25,8 +29,21 @@ namespace Florama.Api.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Registra um novo usuário na plataforma.
+        /// </summary>
+        /// <remarks>
+        /// Endpoint público — não requer autenticação.
+        ///
+        /// A senha e a confirmação devem ser idênticas. Novos usuários são criados com perfil comum (não admin).
+        /// Após o cadastro, utilize o endpoint de login em **Auth/login** para obter o token.
+        /// </remarks>
+        /// <param name="request">Dados do novo usuário (nome, email, senha e confirmação de senha).</param>
+        /// <returns>Dados do usuário criado (id, nome, email e indicação se é admin).</returns>
         [HttpPost("criar")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(UsuarioViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Criar(CriarUsuarioRequest request)
         {
             var dto = _mapper.Map<CriarUsuarioDto>(request);

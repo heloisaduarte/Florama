@@ -37,9 +37,6 @@ namespace Florama.Data
             var administrador = new Usuario(
                 nome: "Administrador",
                 email: email,
-                cpf: "52998224725",
-                dataNascimento: new DateOnly(1990, 1, 1),
-                telefone: "(11) 99999-9999",
                 isAdmin: true,
                 senhaHash: hasher.Hash(senha));
 

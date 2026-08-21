@@ -6,12 +6,6 @@ namespace Florama.Api.Request.Usuario
 
         public string Email { get; set; } = null!;
 
-        public string Cpf { get; set; } = null!;
-
-        public DateOnly DataNascimento { get; set; }
-
-        public string Telefone { get; set; } = null!;
-
         public string Senha { get; set; } = null!;
 
         public string ConfirmarSenha { get; set; } = null!;

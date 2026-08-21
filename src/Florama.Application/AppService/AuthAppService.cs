@@ -162,9 +162,6 @@ namespace Florama.Application.AppService
                 var usuario = new Usuario(
                     dto.Nome,
                     dto.Email,
-                    dto.Cpf,
-                    dto.DataNascimento,
-                    dto.Telefone,
                     isAdmin: false,
                     senhaHash);
 

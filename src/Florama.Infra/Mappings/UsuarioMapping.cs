@@ -22,27 +22,6 @@ namespace Florama.Data.Mappings
                     .IsRequired();
             });
 
-            builder.OwnsOne(a => a.Telefone, telefone =>
-            {
-                telefone.Property(x => x.Numero)
-                    .HasColumnType("varchar(11)")
-                    .HasColumnName(nameof(Usuario.Telefone).ToUpper())
-                    .IsRequired();
-            });
-
-            builder.OwnsOne(a => a.Cpf, cpf =>
-            {
-                cpf.Property(x => x.CpfLimpo)
-                    .HasColumnType("varchar(11)")
-                    .HasColumnName(nameof(Usuario.Cpf).ToUpper())
-                    .IsRequired();
-            });
-
-            builder.Property(a => a.DataNascimento)
-                .IsRequired()
-                .HasColumnType("date")
-                .HasColumnName(nameof(Usuario.DataNascimento).ToUpper());
-
             builder.Property(a => a.IsAdmin)
                 .IsRequired()
                 .HasColumnType("bit")

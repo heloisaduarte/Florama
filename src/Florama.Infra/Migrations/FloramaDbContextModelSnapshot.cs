@@ -270,10 +270,6 @@ namespace Florama.Data.Migrations
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateOnly>("DataNascimento")
-                        .HasColumnType("date")
-                        .HasColumnName("DATANASCIMENTO");
-
                     b.Property<bool>("EmailConfirmado")
                         .HasColumnType("bit")
                         .HasColumnName("EMAILCONFIRMADO");
@@ -367,24 +363,6 @@ namespace Florama.Data.Migrations
 
             modelBuilder.Entity("Florama.Domain.Entities.Usuario", b =>
                 {
-                    b.OwnsOne("Florama.Domain.ValueObjects.Cpf", "Cpf", b1 =>
-                        {
-                            b1.Property<long>("UsuarioId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<string>("CpfLimpo")
-                                .IsRequired()
-                                .HasColumnType("varchar(11)")
-                                .HasColumnName("CPF");
-
-                            b1.HasKey("UsuarioId");
-
-                            b1.ToTable("USUARIO");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UsuarioId");
-                        });
-
                     b.OwnsOne("Florama.Domain.ValueObjects.Email", "Email", b1 =>
                         {
                             b1.Property<long>("UsuarioId")
@@ -403,31 +381,7 @@ namespace Florama.Data.Migrations
                                 .HasForeignKey("UsuarioId");
                         });
 
-                    b.OwnsOne("Florama.Domain.ValueObjects.Telefone", "Telefone", b1 =>
-                        {
-                            b1.Property<long>("UsuarioId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<string>("Numero")
-                                .IsRequired()
-                                .HasColumnType("varchar(11)")
-                                .HasColumnName("TELEFONE");
-
-                            b1.HasKey("UsuarioId");
-
-                            b1.ToTable("USUARIO");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UsuarioId");
-                        });
-
-                    b.Navigation("Cpf")
-                        .IsRequired();
-
                     b.Navigation("Email")
-                        .IsRequired();
-
-                    b.Navigation("Telefone")
                         .IsRequired();
                 });
 

@@ -15,17 +15,6 @@ namespace Florama.Api.Validations.Usuario
                 .NotEmpty().WithMessage("Email é obrigatório.")
                 .EmailAddress().WithMessage("Email inválido.");
 
-            RuleFor(x => x.Cpf)
-                .NotEmpty().WithMessage("CPF é obrigatório.");
-
-            RuleFor(x => x.DataNascimento)
-                .NotEmpty().WithMessage("Data de nascimento é obrigatória.")
-                .Must(data => data < DateOnly.FromDateTime(DateTime.Today))
-                .WithMessage("Data de nascimento inválida.");
-
-            RuleFor(x => x.Telefone)
-                .NotEmpty().WithMessage("Telefone é obrigatório.");
-
             RuleFor(x => x.Senha)
                 .NotEmpty().WithMessage("Senha é obrigatória.")
                 .MinimumLength(8).WithMessage("Senha deve ter no mínimo 8 caracteres.")

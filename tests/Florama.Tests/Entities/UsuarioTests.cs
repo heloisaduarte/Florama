@@ -11,9 +11,6 @@ namespace Florama.Tests.Domain.Entities
             return new Usuario(
                 nome: "Maria Silva",
                 email: "maria@florama.com.br",
-                cpf: "529.982.247-25",
-                dataNascimento: new DateOnly(1990, 5, 10),
-                telefone: "(11) 98765-4321",
                 isAdmin: false,
                 senhaHash: "hash-teste");
         }
