@@ -128,7 +128,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHealthChecks("/health");
+app.MapHealthChecks("/health").AllowAnonymous();
 
 await DataSeeder.InitializeDatabaseAsync(app.Services, app.Configuration);
 
