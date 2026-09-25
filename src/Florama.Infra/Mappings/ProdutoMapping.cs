@@ -1,4 +1,4 @@
-﻿using Florama.Data.Extensions;
+using Florama.Data.Extensions;
 using Florama.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,6 +14,12 @@ namespace Florama.Data.Mappings
             .IsRequired()
             .HasMaxLength(100)
             .HasColumnName(nameof(Produto.Nome).ToUpper());
+
+            builder.Property(u => u.Descricao)
+            .HasColumnType("VARCHAR")
+            .IsRequired()
+            .HasMaxLength(1000)
+            .HasColumnName(nameof(Produto.Descricao).ToUpper());
 
             builder.Property(u => u.Valor)
             .HasColumnType("DECIMAL")

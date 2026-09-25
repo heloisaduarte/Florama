@@ -80,26 +80,26 @@ namespace Florama.Data
 
             db.AddRange(velas, sabonetes, aromatizadores);
 
-            AdicionarProduto(db, "Vela de Lavanda", 25.90m, velas, 12,
+            AdicionarProduto(db, "Vela de Lavanda", "Vela aromática artesanal com notas florais relaxantes de lavanda", 25.90m, velas, 12,
                 "https://placehold.co/400x400/png?text=Vela+de+Lavanda");
 
-            AdicionarProduto(db, "Vela de Eucalipto", 27.50m, velas, 8,
+            AdicionarProduto(db, "Vela de Eucalipto", "Vela aromática artesanal com aroma refrescante e purificador de eucalipto", 27.50m, velas, 8,
                 "https://placehold.co/400x400/png?text=Vela+de+Eucalipto");
 
-            AdicionarProduto(db, "Vela de Baunilha", 24.90m, velas, 10,
+            AdicionarProduto(db, "Vela de Baunilha", "Vela aromática artesanal com toque doce e acolhedor de baunilha", 24.90m, velas, 10,
                 "https://placehold.co/400x400/png?text=Vela+de+Baunilha",
                 "https://placehold.co/400x400/png?text=Vela+de+Baunilha+2");
 
-            AdicionarProduto(db, "Sabonete de Mel e Aveia", 12.90m, sabonetes, 30,
+            AdicionarProduto(db, "Sabonete de Mel e Aveia", "Sabonete artesanal hidratante e esfoliante com mel natural e aveia", 12.90m, sabonetes, 30,
                 "https://placehold.co/400x400/png?text=Sabonete+de+Mel+e+Aveia");
 
-            AdicionarProduto(db, "Sabonete de Argila e Hortelã", 13.50m, sabonetes, 25,
+            AdicionarProduto(db, "Sabonete de Argila e Hortelã", "Sabonete artesanal purificante com argila verde e óleo essencial de hortelã", 13.50m, sabonetes, 25,
                 "https://placehold.co/400x400/png?text=Sabonete+de+Argila");
 
-            AdicionarProduto(db, "Aromatizador de Lavanda", 19.90m, aromatizadores, 15,
+            AdicionarProduto(db, "Aromatizador de Lavanda", "Difusor de ambientes com fragrância suave e tranquilizante de lavanda", 19.90m, aromatizadores, 15,
                 "https://placehold.co/400x400/png?text=Aromatizador+de+Lavanda");
 
-            AdicionarProduto(db, "Aromatizador de Capim-Limão", 19.90m, aromatizadores, 20,
+            AdicionarProduto(db, "Aromatizador de Capim-Limão", "Aromatizador de ambiente em spray com aroma cítrico e revigorante de capim-limão", 19.90m, aromatizadores, 20,
                 "https://placehold.co/400x400/png?text=Aromatizador+de+Capim-Limao");
 
             await db.SaveChangesAsync();
@@ -108,6 +108,7 @@ namespace Florama.Data
         private static void AdicionarProduto(
             FloramaDbContext db,
             string nome,
+            string descricao,
             decimal valor,
             Categoria categoria,
             int quantidadeEstoque,
@@ -115,6 +116,7 @@ namespace Florama.Data
         {
             var produto = new Produto();
             produto.DefinirNome(nome);
+            produto.DefinirDescricao(descricao);
             produto.DefinirValor(valor);
             produto.DefinirCategoria(categoria);
 

@@ -176,6 +176,12 @@ namespace Florama.Data.Migrations
                         .HasColumnType("DATETIME2")
                         .HasColumnName("DATACRIACAO");
 
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("VARCHAR")
+                        .HasColumnName("DESCRICAO");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)

@@ -1,10 +1,11 @@
-﻿using Florama.Domain.DomainObjects;
+using Florama.Domain.DomainObjects;
 
 namespace Florama.Domain.Entities
 {
     public class Produto : AuditEntity
     {
         public string Nome { get; private set; } = null!;
+        public string Descricao { get; private set; } = null!;
         public decimal Valor { get; private set; }
         public long CategoriaId { get; private set; }
         public Categoria Categoria { get; private set; } = null!;
@@ -23,6 +24,17 @@ namespace Florama.Domain.Entities
                 throw new DomainException("Nome deve ter entre 3 e 100 caracteres.");
 
             Nome = nome;
+        }
+
+        public void DefinirDescricao(string descricao)
+        {
+            if (string.IsNullOrWhiteSpace(descricao))
+                throw new DomainException("Descrição é obrigatória.");
+
+            if (descricao.Length < 3 || descricao.Length > 1000)
+                throw new DomainException("Descrição deve ter entre 3 e 1000 caracteres.");
+
+            Descricao = descricao;
         }
 
         public void DefinirValor(decimal valor)

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Florama.Application.DTOs;
 using Florama.Application.Interfaces;
 using Florama.Domain.Abstractions;
@@ -52,6 +52,7 @@ namespace Florama.Application.AppService
             {
                 produto.DefinirValor(dto.Valor);
                 produto.DefinirNome(dto.Nome);
+                produto.DefinirDescricao(dto.Descricao);
                 produto.DefinirCategoria(categoria);
 
                 if (dto.Fotos is { Count: > 0 })
@@ -171,6 +172,7 @@ namespace Florama.Application.AppService
             {
                 produto.DefinirValor(dto.Valor);
                 produto.DefinirNome(dto.Nome);
+                produto.DefinirDescricao(dto.Descricao);
                 produto.DefinirCategoria(categoria);
 
                 foreach (var foto in dto.Fotos)

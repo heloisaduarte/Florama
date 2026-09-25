@@ -11,6 +11,7 @@ namespace Florama.Tests.Domain.Entities
             var categoria = new Categoria("Velas Aromáticas", "Velas para aromatização de ambientes");
             var produto = new Produto();
             produto.DefinirNome("Vela de Lavanda");
+            produto.DefinirDescricao("Vela aromática relaxante de lavanda");
             produto.DefinirValor(25.90m);
             produto.DefinirCategoria(categoria);
             return produto;
@@ -81,6 +82,28 @@ namespace Florama.Tests.Domain.Entities
 
             Assert.Throws<DomainException>(() => produto.DefinirNome(""));
             Assert.Throws<DomainException>(() => produto.DefinirNome("Ab"));
+        }
+
+        [Fact]
+        public void DefinirDescricao_Valida_DeveAtribuirDescricao()
+        {
+            var produto = CriarProduto();
+            var descricao = "Descrição detalhada do produto com aroma floral.";
+
+            produto.DefinirDescricao(descricao);
+
+            Assert.Equal(descricao, produto.Descricao);
+        }
+
+        [Fact]
+        public void Descricao_Invalida_Lanca_DomainException()
+        {
+            var produto = CriarProduto();
+
+            Assert.Throws<DomainException>(() => produto.DefinirDescricao(""));
+            Assert.Throws<DomainException>(() => produto.DefinirDescricao("   "));
+            Assert.Throws<DomainException>(() => produto.DefinirDescricao("Ab"));
+            Assert.Throws<DomainException>(() => produto.DefinirDescricao(new string('A', 1001)));
         }
     }
 }
