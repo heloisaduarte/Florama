@@ -7,6 +7,7 @@ using Florama.Domain.Abstractions;
 using Florama.Domain.Notifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Florama.Api.Controllers
 {
@@ -42,6 +43,7 @@ namespace Florama.Api.Controllers
         /// <returns>Dados do usuário criado (id, nome, email e indicação se é admin).</returns>
         [HttpPost("criar")]
         [AllowAnonymous]
+        [EnableRateLimiting("auth")]
         [ProducesResponseType(typeof(UsuarioViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Criar(CriarUsuarioRequest request)

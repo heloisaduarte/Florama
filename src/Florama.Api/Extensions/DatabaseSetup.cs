@@ -1,4 +1,4 @@
-﻿using Florama.Data;
+using Florama.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Florama.Api.Extensions
@@ -16,8 +16,11 @@ namespace Florama.Api.Extensions
                 options.UseSqlServer(connectionString, sqlOptions =>
                 {
                     sqlOptions.MigrationsAssembly("Florama.Data");
-                    sqlOptions.CommandTimeout(35);
-                    sqlOptions.EnableRetryOnFailure(3);
+                    sqlOptions.CommandTimeout(60);
+                    sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 6,
+                        maxRetryDelay: TimeSpan.FromSeconds(15),
+                        errorNumbersToAdd: new[] { 40925, 40613, 40501, 40197 });
                 });
 
 #if DEBUG

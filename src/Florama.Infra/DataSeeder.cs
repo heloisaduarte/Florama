@@ -15,10 +15,26 @@ namespace Florama.Data
             var db = scope.ServiceProvider.GetRequiredService<FloramaDbContext>();
             var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
 
-            await db.Database.MigrateAsync();
+            // Azure SQL Serverless pode estar pausado (auto-pause).
+            // Ao receber uma conexão, ele leva de 30 a 60 segundos para acordar (erro 40925 ou 40613).
+            const int maxTentativas = 6;
+            var delayTentativa = TimeSpan.FromSeconds(10);
 
-            await SeedAdminAsync(db, hasher, configuration);
-            await SeedDemoDataAsync(db, configuration);
+            for (var tentativa = 1; tentativa <= maxTentativas; tentativa++)
+            {
+                try
+                {
+                    await db.Database.MigrateAsync();
+                    await SeedAdminAsync(db, hasher, configuration);
+                    await SeedDemoDataAsync(db, configuration);
+                    break;
+                }
+                catch (Microsoft.Data.SqlClient.SqlException ex) when (tentativa < maxTentativas && (ex.Number == 40925 || ex.Number == 40613 || ex.Number == 40501 || ex.Number == 40197))
+                {
+                    Console.WriteLine($"[Azure SQL] Banco de dados inicializando/acordando (erro {ex.Number}). Aguardando retomada... tentativa {tentativa}/{maxTentativas}");
+                    await Task.Delay(delayTentativa);
+                }
+            }
         }
 
         private static async Task SeedAdminAsync(FloramaDbContext db, IPasswordHasher hasher, IConfiguration configuration)
